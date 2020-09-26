@@ -12,10 +12,13 @@
 #include <string.h> // memcpy
 #include <unistd.h> // sleep, usleep
 #include <sys/time.h> // gettimeofday
+/// Allows to include the RookieHPC_mpi header without MPI substitions so that MPI calls are issued as is.
 #define ROOKIEHPC_MPI_NO_SUBSTITUTION
 #include "RookieHPC_mpi.h"
 
+/// Maximum length of names used in this library.
 #define ROOKIEHPC_MAX_FILENAME_LENGTH 256
+/// Maximum length of arguments used in this library.
 #define ROOKIEHPC_MAX_ARGUMENTS_LENGTH 256
 
 /**
@@ -142,6 +145,11 @@ volatile bool RookieHPC_manager_end = false;
 // FUNCTIONS NEEDED //
 /////////////////////
 
+/**
+ * @brief Returns walltime in seconds.
+ * @details This function is used as a substitute to MPI_Wtime when MPI_Init is not called yet.
+ * @return The walltime, in seconds.
+ **/
 static double RookieHPC_Wtime()
 {
     struct timeval wtime;
@@ -151,17 +159,31 @@ static double RookieHPC_Wtime()
     return wtime_second;
 }
 
+/**
+ * @brief Sleeps for a given duration.
+ * @param[in] milliseconds The duration to sleep for, in milliseconds.
+ **/
 static void RookieHPC_sleep(unsigned int milliseconds)
 {
     usleep(milliseconds * 1000);
 }
 
+/**
+ * @brief Fills the filename field in the MPI monitoring message.
+ * @param[inout] message The MPI monitoring message.
+ * @param[in] file The name of the file from which the MPI call is issued.
+ **/
 static void RookieHPC_MPI_message_set_name(struct RookieHPC_MPI_message_t* message, const char* file)
 {
     strncpy(message->file, file, ROOKIEHPC_MAX_FILENAME_LENGTH);
     message->file[ROOKIEHPC_MAX_FILENAME_LENGTH-1] = '\0';
 }
 
+/**
+ * @brief Fills the arguments field in the MPI monitoring message.
+ * @param[inout] message The MPI monitoring message.
+ * @param[in] args The arguments passed to the MPI call issued.
+ **/
 static void RookieHPC_MPI_message_set_args(struct RookieHPC_MPI_message_t* message, const char* args)
 {
     strncpy(message->args, args, ROOKIEHPC_MAX_ARGUMENTS_LENGTH);
@@ -185,26 +207,36 @@ static void RookieHPC_send_update(struct RookieHPC_MPI_message_t* message, const
 // ROOKIEHPC VERSIONS OF MPI ROUTINES //
 ///////////////////////////////////////
 
-static void print_horizontal_separator(int current_max_routine_name_length, int current_max_where_length, int current_max_when_length)
+/**
+ * @brief Prints an horizontal seperator, used in tables.
+ * @param[in] routine_name_length The maximum length of the strings contained in the 'routine name' column.
+ * @param[in] where_length The maximum length of the strings contained in the 'where' column.
+ * @param[in] when_length The maximum length of the strings contained in the 'when' column.
+ **/
+static void print_horizontal_separator(int routine_name_length, int where_length, int when_length)
 {
     printf("+-----+-");
-    for(int i = 0; i < current_max_routine_name_length; i++)
+    for(int i = 0; i < routine_name_length; i++)
     {
         printf("-");
     }
     printf("-+-");
-    for(int i = 0; i < current_max_where_length; i++)
+    for(int i = 0; i < where_length; i++)
     {
         printf("-");
     }
     printf("-+-");
-    for(int i = 0; i < current_max_when_length; i++)
+    for(int i = 0; i < when_length; i++)
     {
         printf("-");
     }
     printf("-----------+\n");
 }
 
+/**
+ * @brief Updates the monitoring report.
+ * @return This is a placeholder to fit the fork task prototype.
+ **/
 static void* RookieHPC_manager()
 {
     // Every second, send updates
