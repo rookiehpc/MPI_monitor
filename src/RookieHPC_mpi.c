@@ -88,6 +88,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_SEND,
                                     /// The message is sent about MPI_Sendrecv
                                     ROOKIEHPC_MESSAGE_SENDRECV,
+                                    /// The message is sent about MPI_Sendrecv_replace
+                                    ROOKIEHPC_MESSAGE_SENDRECV_REPLACE,
                                     /// The message is sent about MPI_Ssend
                                     ROOKIEHPC_MESSAGE_SSEND,
                                     /// The process has not even called MPI_Init so far
@@ -116,6 +118,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Rsend",
                                                "MPI_Send",
                                                "MPI_Sendrecv",
+                                               "MPI_Sendrecv_replace",
                                                "MPI_Ssend",
                                                "-" };
 
@@ -681,6 +684,19 @@ void RookieHPC_MPI_Sendrecv(const void* buffer_send, int count_send, MPI_Datatyp
     RookieHPC_send_update(&message, file, line, args);
 
     MPI_Sendrecv(buffer_send, count_send, datatype_send, recipient, tag_send, buffer_recv, count_recv, datatype_recv, sender, tag_recv, communicator, status);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
+}
+
+void RookieHPC_MPI_Sendrecv_replace(void* buffer, int count_send, MPI_Datatype datatype_send, int recipient, int tag_send, int sender, int tag_recv, MPI_Comm communicator, MPI_Status* status, char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_SENDRECV_REPLACE;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Sendrecv_replace(buffer, count_send, datatype_send, recipient, tag_send, sender, tag_recv, communicator, status);
 
     message.before = false;
     RookieHPC_send_update(&message, file, line, args);
