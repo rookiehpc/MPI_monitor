@@ -72,6 +72,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_GET_ADDRESS,
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
+                                    /// The message is sent about MPI_Issend
+                                    ROOKIEHPC_MESSAGE_ISSEND,
                                     /// The message is sent about MPI_Recv
                                     ROOKIEHPC_MESSAGE_RECV,
                                     /// The message is sent about MPI_Send
@@ -96,6 +98,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Gatherv",
                                                "MPI_Get_address",
                                                "MPI_Init",
+                                               "MPI_Issend",
                                                "MPI_Recv",
                                                "MPI_Send",
                                                "MPI_Ssend",
@@ -575,6 +578,19 @@ void RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const cha
 
     // All wait for the process 0 to tell us the initialisation is complete and successful
     MPI_Barrier(MPI_COMM_WORLD);
+}
+
+void RookieHPC_MPI_Issend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_ISSEND;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Issend(buffer, count, type, dst, tag, comm, request);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
 }
 
 void RookieHPC_MPI_Recv(void* buffer, int count, MPI_Datatype type, int source, int tag, MPI_Comm comm, MPI_Status* status, char* file, int line, const char* args)
