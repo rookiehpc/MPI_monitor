@@ -80,6 +80,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_ISSEND,
                                     /// The message is sent about MPI_Recv
                                     ROOKIEHPC_MESSAGE_RECV,
+                                    /// The message is sent about MPI_Rsend
+                                    ROOKIEHPC_MESSAGE_RSEND,
                                     /// The message is sent about MPI_Send
                                     ROOKIEHPC_MESSAGE_SEND,
                                     /// The message is sent about MPI_Ssend
@@ -106,6 +108,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Isend",
                                                "MPI_Issend",
                                                "MPI_Recv",
+                                               "MPI_Rsend",
                                                "MPI_Send",
                                                "MPI_Ssend",
                                                "-" };
@@ -646,6 +649,19 @@ void RookieHPC_MPI_Send(void* buffer, int count, MPI_Datatype type, int dst, int
     RookieHPC_send_update(&message, file, line, args);
 
     MPI_Send(buffer, count, type, dst, tag, comm);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
+}
+
+void RookieHPC_MPI_Rsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_RSEND;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Rsend(buffer, count, type, dst, tag, comm);
 
     message.before = false;
     RookieHPC_send_update(&message, file, line, args);
