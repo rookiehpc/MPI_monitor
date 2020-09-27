@@ -83,7 +83,7 @@ void RookieHPC_MPI_Ssend(void* buffer, int count, MPI_Datatype type, int dst, in
 #define MPI_Init(...) RookieHPC_MPI_Init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Isend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Isend(...) RookieHPC_MPI_Isend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
-/// Redirects calls from MPI_Isend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+/// Redirects calls from MPI_Ibsend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Ibsend(...) RookieHPC_MPI_Ibsend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Issend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Issend(...) RookieHPC_MPI_Issend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
