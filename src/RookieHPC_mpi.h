@@ -7,19 +7,6 @@
 #ifndef ROOKIEHPC_MPI_H_INCLUDED
 #define ROOKIEHPC_MPI_H_INCLUDED
 
-////////////////////
-// CUSTOMISATION //
-//////////////////
-
-// Uncomment this define so that an MPI_Send will always result in an MPI_Ssend (same for non-blocking)
-// #define ROOKIEHPC_ENFORCE_SYNCHRONOUS_SENDS
-
-//////////////
-// WARNING //
-////////////
-
-// Please do not modify the code below.
-
 #include <mpi.h>
 
 /////////////////////////////////////////
