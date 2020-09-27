@@ -37,6 +37,7 @@ void RookieHPC_MPI_Send(void* buffer, int count, MPI_Datatype type, int dst, int
 void RookieHPC_MPI_Sendrecv(const void* buffer_send, int count_send, MPI_Datatype datatype_send, int recipient, int tag_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int sender, int tag_recv, MPI_Comm communicator, MPI_Status* status, char* file, int line, const char* args);
 void RookieHPC_MPI_Sendrecv_replace(void* buffer, int count_send, MPI_Datatype datatype_send, int recipient, int tag_send, int sender, int tag_recv, MPI_Comm communicator, MPI_Status* status, char* file, int line, const char* args);
 void RookieHPC_MPI_Ssend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args);
+void RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int line, const char* args);
 
 //////////////////////////////////////////////
 // DEFINES TO BYPASS ORIGINAL MPI ROUTINES //
@@ -91,6 +92,8 @@ void RookieHPC_MPI_Ssend(void* buffer, int count, MPI_Datatype type, int dst, in
 #define MPI_Sendrecv_replace(...) RookieHPC_MPI_Sendrecv_replace(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Ssend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Ssend(...) RookieHPC_MPI_Ssend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Wait to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Wait(...) RookieHPC_MPI_Wait(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 #endif // ROOKIEHPC_MPI_NO_SUBSTITUTION
 
 #endif // ROOKIEHPC_MPI_H_INCLUDED

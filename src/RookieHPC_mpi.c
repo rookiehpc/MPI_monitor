@@ -93,7 +93,9 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     /// The message is sent about MPI_Ssend
                                     ROOKIEHPC_MESSAGE_SSEND,
                                     /// The process has not even called MPI_Init so far
-                                    ROOKIEHPC_MESSAGE_UNINITIALISED };
+                                    ROOKIEHPC_MESSAGE_UNINITIALISED,
+                                    /// The message is sent about MPI_Wait
+                                    ROOKIEHPC_MESSAGE_WAIT };
 
 /// Contains the name of the MPI function matching to a message type
 const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
@@ -120,7 +122,8 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Sendrecv",
                                                "MPI_Sendrecv_replace",
                                                "MPI_Ssend",
-                                               "-" };
+                                               "-",
+                                               "MPI_Wait" };
 
 /// Contains the message representing an update to the debugger
 struct RookieHPC_MPI_message_t
@@ -723,6 +726,19 @@ void RookieHPC_MPI_Ssend(void* buffer, int count, MPI_Datatype type, int dst, in
     RookieHPC_send_update(&message, file, line, args);
 
     MPI_Ssend(buffer, count, type, dst, tag, comm);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
+}
+
+void RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_WAIT;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Wait(request, status);
 
     message.before = false;
     RookieHPC_send_update(&message, file, line, args);
