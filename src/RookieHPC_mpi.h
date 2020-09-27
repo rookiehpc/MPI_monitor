@@ -40,6 +40,7 @@ void RookieHPC_MPI_Gather(void* buffer_send, int count_send, MPI_Datatype dataty
 void RookieHPC_MPI_Gatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args);
 void RookieHPC_MPI_Get_address(const void* location, MPI_Aint* address, char* file, int line, const char* args);
 void RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const char* args);
+void RookieHPC_MPI_Ibsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 void RookieHPC_MPI_Isend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 void RookieHPC_MPI_Issend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 void RookieHPC_MPI_Recv(void* buffer, int count, MPI_Datatype type, int source, int tag, MPI_Comm comm, MPI_Status* status, char* file, int line, const char* args);
@@ -81,6 +82,8 @@ void RookieHPC_MPI_Ssend(void* buffer, int count, MPI_Datatype type, int dst, in
 #define MPI_Init(...) RookieHPC_MPI_Init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Isend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Isend(...) RookieHPC_MPI_Isend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Isend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Ibsend(...) RookieHPC_MPI_Ibsend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Issend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Issend(...) RookieHPC_MPI_Issend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Recv to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
