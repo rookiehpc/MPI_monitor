@@ -74,6 +74,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_INITIALISED,
                                     /// The message is sent about MPI_Ibsend
                                     ROOKIEHPC_MESSAGE_IBSEND,
+                                    /// The message is sent about MPI_Irsend
+                                    ROOKIEHPC_MESSAGE_IRSEND,
                                     /// The message is sent about MPI_Isend
                                     ROOKIEHPC_MESSAGE_ISEND,
                                     /// The message is sent about MPI_Issend
@@ -105,6 +107,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Get_address",
                                                "MPI_Init",
                                                "MPI_Ibsend",
+                                               "MPI_Irsend",
                                                "MPI_Isend",
                                                "MPI_Issend",
                                                "MPI_Recv",
@@ -597,6 +600,19 @@ void RookieHPC_MPI_Ibsend(void* buffer, int count, MPI_Datatype type, int dst, i
     RookieHPC_send_update(&message, file, line, args);
 
     MPI_Ibsend(buffer, count, type, dst, tag, comm, request);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
+}
+
+void RookieHPC_MPI_Irsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_IRSEND;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Irsend(buffer, count, type, dst, tag, comm, request);
 
     message.before = false;
     RookieHPC_send_update(&message, file, line, args);
