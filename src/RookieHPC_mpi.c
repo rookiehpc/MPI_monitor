@@ -72,6 +72,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_GATHERV,
                                     /// The message is sent about MPI_Get_address
                                     ROOKIEHPC_MESSAGE_GET_ADDRESS,
+                                    /// The message is sent about MPI_Iallgather
+                                    ROOKIEHPC_MESSAGE_IALLGATHER,
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
                                     /// The message is sent about MPI_Ibsend
@@ -120,6 +122,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Gather",
                                                "MPI_Gatherv",
                                                "MPI_Get_address",
+                                               "MPI_Iallgather",
                                                "MPI_Init",
                                                "MPI_Ibsend",
                                                "MPI_Irsend",
@@ -568,6 +571,19 @@ void RookieHPC_MPI_Get_address(const void* location, MPI_Aint* address, char* fi
     RookieHPC_send_update(&message, file, line, args);
 
     MPI_Get_address(location, address);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
+}
+
+void RookieHPC_MPI_Iallgather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_IALLGATHER;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Iallgather(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, communicator, request);
 
     message.before = false;
     RookieHPC_send_update(&message, file, line, args);
