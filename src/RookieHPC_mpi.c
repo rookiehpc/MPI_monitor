@@ -99,7 +99,9 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     /// The message is sent about MPI_Waitall
                                     ROOKIEHPC_MESSAGE_WAITALL,
                                     /// The message is sent about MPI_Waitany
-                                    ROOKIEHPC_MESSAGE_WAITANY };
+                                    ROOKIEHPC_MESSAGE_WAITANY,
+                                    /// The message is sent about MPI_Waitsome
+                                    ROOKIEHPC_MESSAGE_WAITSOME };
 
 /// Contains the name of the MPI function matching to a message type
 const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
@@ -129,7 +131,8 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
-                                               "MPI_Waitany" };
+                                               "MPI_Waitany",
+                                               "MPI_Waitsome" };
 
 /// Contains the message representing an update to the debugger
 struct RookieHPC_MPI_message_t
@@ -771,6 +774,19 @@ void RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_St
     RookieHPC_send_update(&message, file, line, args);
 
     MPI_Waitany(count, requests, index, status);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
+}
+
+void RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* index_count, int indices[], MPI_Status statuses[], char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_WAITSOME;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Waitsome(request_count, requests, index_count, indices, statuses);
 
     message.before = false;
     RookieHPC_send_update(&message, file, line, args);
