@@ -22,6 +22,7 @@ void RookieHPC_MPI_Barrier(MPI_Comm comm, char* file, int line, const char* args
 void RookieHPC_MPI_Bcast(void* buffer, int count, MPI_Datatype datatype, int emitter_rank, MPI_Comm communicator, char* file, int line, const char* args);
 void RookieHPC_MPI_Bsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args);
 void RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MPI_Comm* new_communicator, char* file, int line, const char* args);
+void RookieHPC_MPI_Exscan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 void RookieHPC_MPI_Finalize(char* file, int line);
 void RookieHPC_MPI_Gather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args);
 void RookieHPC_MPI_Gatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args);
@@ -65,6 +66,8 @@ void RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* inde
 #define MPI_Bsend(...) RookieHPC_MPI_Bsend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Comm_split to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Comm_split(...) RookieHPC_MPI_Comm_split(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Exscan to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Exscan(...) RookieHPC_MPI_Exscan(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Finalize to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Finalize() RookieHPC_MPI_Finalize(__FILE__, __LINE__)
 /// Redirects calls from MPI_Gather to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued

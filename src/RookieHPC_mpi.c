@@ -62,6 +62,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_BSEND,
                                     /// The message is sent about MPI_Comm_split
                                     ROOKIEHPC_MESSAGE_COMM_SPLIT,
+                                    /// The message is sent about MPI_Exscan
+                                    ROOKIEHPC_MESSAGE_EXSCAN,
                                     /// The message is sent about MPI_Finalize
                                     ROOKIEHPC_MESSAGE_FINALISED,
                                     /// The message is sent about MPI_Gather
@@ -113,6 +115,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Bcast",
                                                "MPI_Bsend",
                                                "MPI_Comm_split",
+                                               "MPI_Exscan",
                                                "MPI_Finalize",
                                                "MPI_Gather",
                                                "MPI_Gatherv",
@@ -497,6 +500,19 @@ void RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MP
     RookieHPC_send_update(&message, file, line, args);
 
     MPI_Comm_split(old_communicator, colour, key, new_communicator);
+
+    message.before = false;
+    RookieHPC_send_update(&message, file, line, args);
+}
+
+void RookieHPC_MPI_Exscan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = ROOKIEHPC_MESSAGE_EXSCAN;
+    message.before = true;
+    RookieHPC_send_update(&message, file, line, args);
+
+    MPI_Exscan(send_buffer, receive_buffer, count, datatype, operation, communicator);
 
     message.before = false;
     RookieHPC_send_update(&message, file, line, args);
