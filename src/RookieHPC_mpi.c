@@ -43,6 +43,9 @@ void RookieHPC_console_clear_screen()
 // STRUCTURES DECLARATIONS //
 ////////////////////////////
 
+enum RookieHPC_monitoring_message_temporality_t { ROOKIEHPC_TEMPORALITY_BEFORE,
+                                                  ROOKIEHPC_TEMPORALITY_AFTER };
+
 /// Indicates from which MPI call the message was issued
 enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_ALLGATHER,
@@ -245,6 +248,14 @@ static void RookieHPC_send_update(struct RookieHPC_MPI_message_t* message, const
     MPI_Put(message, sizeof(struct RookieHPC_MPI_message_t), MPI_CHAR, 0, RookieHPC_my_rank, sizeof(struct RookieHPC_MPI_message_t), MPI_CHAR, RookieHPC_window);
 }
 
+static void RookieHPC_monitoring_message(enum RookieHPC_monitoring_message_temporality_t temporality, enum RookieHPC_MPI_message_type_t type, const char* file, int line, const char* args)
+{
+    struct RookieHPC_MPI_message_t message;
+    message.type = type;
+    message.before = (temporality == ROOKIEHPC_TEMPORALITY_BEFORE);
+    RookieHPC_send_update(&message, file, line, args);
+}
+
 /////////////////////////////////////////
 // ROOKIEHPC VERSIONS OF MPI ROUTINES //
 ///////////////////////////////////////
@@ -396,140 +407,77 @@ static void* RookieHPC_manager()
 
 void RookieHPC_MPI_Allgather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_ALLGATHER;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ALLGATHER, file, line, args);
     MPI_Allgather(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ALLGATHER, file, line, args);
 }
 
 void RookieHPC_MPI_Allgatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_ALLGATHERV;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ALLGATHERV, file, line, args);
     MPI_Allgatherv(buffer_send, count_send, datatype_send, buffer_recv, counts_recv, displacements, datatype_recv, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ALLGATHERV, file, line, args);
 }
 
 void RookieHPC_MPI_Allreduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_ALLREDUCE;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ALLREDUCE, file, line, args);
     MPI_Allreduce(send_buffer, receive_buffer, count, datatype, operation, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ALLREDUCE, file, line, args);
 }
 
 void RookieHPC_MPI_Alltoall(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_ALLTOALL;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ALLTOALL, file, line, args);
     MPI_Alltoall(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ALLTOALL, file, line, args);
 }
 
 void RookieHPC_MPI_Alltoallv(void* buffer_send, const int* counts_send, const int* displacements_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_ALLTOALLV;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ALLTOALLV, file, line, args);
     MPI_Alltoallv(buffer_send, counts_send, displacements_send, datatype_send, buffer_recv, counts_recv, displacements_recv, datatype_recv, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ALLTOALLV, file, line, args);
 }
 
 void RookieHPC_MPI_Barrier(MPI_Comm comm, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_BARRIER;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_BARRIER, file, line, args);
     MPI_Barrier(comm);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_BARRIER, file, line, args);
 }
 
 void RookieHPC_MPI_Bcast(void* buffer, int count, MPI_Datatype datatype, int emitter_rank, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_BCAST;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_BCAST, file, line, args);
     MPI_Bcast(buffer, count, datatype, emitter_rank, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_BCAST, file, line, args);
 }
 
 void RookieHPC_MPI_Bsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_BSEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_BSEND, file, line, args);
     MPI_Bsend(buffer, count, type, dst, tag, comm);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_BSEND, file, line, args);
 }
 
 void RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MPI_Comm* new_communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_COMM_SPLIT;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_COMM_SPLIT, file, line, args);
     MPI_Comm_split(old_communicator, colour, key, new_communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_COMM_SPLIT, file, line, args);
 }
 
 void RookieHPC_MPI_Exscan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_EXSCAN;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_EXSCAN, file, line, args);
     MPI_Exscan(send_buffer, receive_buffer, count, datatype, operation, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_EXSCAN, file, line, args);
 }
 
 void RookieHPC_MPI_Finalize(char* file, int line)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_FINALISED;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, "");
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_FINALISED, file, line, "");
     MPI_Win_unlock(0, RookieHPC_window);
     MPI_Barrier(MPI_COMM_WORLD);
     if(RookieHPC_my_rank == 0)
@@ -542,67 +490,37 @@ void RookieHPC_MPI_Finalize(char* file, int line)
 
 void RookieHPC_MPI_Gather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_GATHER;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GATHER, file, line, args);
     MPI_Gather(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, root, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GATHER, file, line, args);
 }
 
 void RookieHPC_MPI_Gatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_GATHERV;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GATHERV, file, line, args);
     MPI_Gatherv(buffer_send, count_send, datatype_send, buffer_recv, counts_recv, displacements, datatype_recv, root, communicator);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GATHERV, file, line, args);
 }
 
 void RookieHPC_MPI_Get_address(const void* location, MPI_Aint* address, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_GET_ADDRESS;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GET_ADDRESS, file, line, args);
     MPI_Get_address(location, address);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GET_ADDRESS, file, line, args);
 }
 
 void RookieHPC_MPI_Iallgather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_IALLGATHER;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IALLGATHER, file, line, args);
     MPI_Iallgather(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, communicator, request);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IALLGATHER, file, line, args);
 }
 
 void RookieHPC_MPI_Iallgatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_IALLGATHERV;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IALLGATHERV, file, line, args);
     MPI_Iallgatherv(buffer_send, count_send, datatype_send, buffer_recv, counts_recv, displacements, datatype_recv, communicator, request);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IALLGATHERV, file, line, args);
 }
 
 void RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const char* args)
@@ -649,10 +567,7 @@ void RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const cha
         pthread_create(&RookieHPC_manager_thread, NULL, (void* (*)(void*))RookieHPC_manager, NULL);
     }
 
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_INITIALISED;
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_INITIALISED, file, line, args);
 
     // All wait for the process 0 to tell us the initialisation is complete and successful
     MPI_Barrier(MPI_COMM_WORLD);
@@ -660,182 +575,98 @@ void RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const cha
 
 void RookieHPC_MPI_Ibsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_IBSEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
     MPI_Ibsend(buffer, count, type, dst, tag, comm, request);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
 }
 
 void RookieHPC_MPI_Irsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_IRSEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IRSEND, file, line, args);
     MPI_Irsend(buffer, count, type, dst, tag, comm, request);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IRSEND, file, line, args);
 }
 
 void RookieHPC_MPI_Isend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_ISEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ISEND, file, line, args);
     MPI_Isend(buffer, count, type, dst, tag, comm, request);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ISEND, file, line, args);
 }
 
 void RookieHPC_MPI_Issend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_ISSEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ISSEND, file, line, args);
     MPI_Issend(buffer, count, type, dst, tag, comm, request);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ISSEND, file, line, args);
 }
 
 void RookieHPC_MPI_Recv(void* buffer, int count, MPI_Datatype type, int source, int tag, MPI_Comm comm, MPI_Status* status, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_RECV;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RECV, file, line, args);
     MPI_Recv(buffer, count, type, source, tag, comm, status);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RECV, file, line, args);
 }
 
 void RookieHPC_MPI_Send(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_SEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SEND, file, line, args);
     MPI_Send(buffer, count, type, dst, tag, comm);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SEND, file, line, args);
 }
 
 void RookieHPC_MPI_Sendrecv(const void* buffer_send, int count_send, MPI_Datatype datatype_send, int recipient, int tag_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int sender, int tag_recv, MPI_Comm communicator, MPI_Status* status, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_SENDRECV;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SENDRECV, file, line, args);
     MPI_Sendrecv(buffer_send, count_send, datatype_send, recipient, tag_send, buffer_recv, count_recv, datatype_recv, sender, tag_recv, communicator, status);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SENDRECV, file, line, args);
 }
 
 void RookieHPC_MPI_Sendrecv_replace(void* buffer, int count_send, MPI_Datatype datatype_send, int recipient, int tag_send, int sender, int tag_recv, MPI_Comm communicator, MPI_Status* status, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_SENDRECV_REPLACE;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SENDRECV_REPLACE, file, line, args);
     MPI_Sendrecv_replace(buffer, count_send, datatype_send, recipient, tag_send, sender, tag_recv, communicator, status);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SENDRECV_REPLACE, file, line, args);
 }
 
 void RookieHPC_MPI_Rsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_RSEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
     MPI_Rsend(buffer, count, type, dst, tag, comm);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
 }
 
 void RookieHPC_MPI_Ssend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_SSEND;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SSEND, file, line, args);
     MPI_Ssend(buffer, count, type, dst, tag, comm);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SSEND, file, line, args);
 }
 
 void RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_WAIT;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WAIT, file, line, args);
     MPI_Wait(request, status);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WAIT, file, line, args);
 }
 
 void RookieHPC_MPI_Waitall(int count, MPI_Request requests[], MPI_Status statuses[], char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_WAITALL;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WAITALL, file, line, args);
     MPI_Waitall(count, requests, statuses);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WAITALL, file, line, args);
 }
 
 void RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_Status* status, char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_WAITANY;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WAITANY, file, line, args);
     MPI_Waitany(count, requests, index, status);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WAITANY, file, line, args);
 }
 
 void RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* index_count, int indices[], MPI_Status statuses[], char* file, int line, const char* args)
 {
-    struct RookieHPC_MPI_message_t message;
-    message.type = ROOKIEHPC_MESSAGE_WAITSOME;
-    message.before = true;
-    RookieHPC_send_update(&message, file, line, args);
-
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WAITSOME, file, line, args);
     MPI_Waitsome(request_count, requests, index_count, indices, statuses);
-
-    message.before = false;
-    RookieHPC_send_update(&message, file, line, args);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WAITSOME, file, line, args);
 }
