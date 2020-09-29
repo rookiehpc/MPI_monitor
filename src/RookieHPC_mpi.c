@@ -81,6 +81,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_IALLGATHERV,
                                     /// The message is sent about MPI_Iallreduce
                                     ROOKIEHPC_MESSAGE_IALLREDUCE,
+                                    /// The message is sent about MPI_Ialltoall
+                                    ROOKIEHPC_MESSAGE_IALLTOALL,
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
                                     /// The message is sent about MPI_Ibsend
@@ -132,6 +134,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Iallgather",
                                                "MPI_Iallgatherv",
                                                "MPI_Iallreduce",
+                                               "MPI_Ialltoall",
                                                "MPI_Init",
                                                "MPI_Ibsend",
                                                "MPI_Irsend",
@@ -546,6 +549,14 @@ int RookieHPC_MPI_Iallreduce(const void* send_buffer, void* receive_buffer, int 
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IALLREDUCE, file, line, args);
     int result = MPI_Iallreduce(send_buffer, receive_buffer, count, datatype, operation, communicator, request);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IALLREDUCE, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Ialltoall(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IALLTOALL, file, line, args);
+    int result = MPI_Ialltoall(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IALLTOALL, file, line, args);
     return result;
 }
 
