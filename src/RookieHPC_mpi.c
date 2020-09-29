@@ -89,6 +89,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_IBARRIER,
                                     /// The message is sent about MPI_Igather
                                     ROOKIEHPC_MESSAGE_IGATHER,
+                                    /// The message is sent about MPI_Igatherv
+                                    ROOKIEHPC_MESSAGE_IGATHERV,
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
                                     /// The message is sent about MPI_Ibsend
@@ -144,6 +146,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Ialltoallv",
                                                "MPI_Ibarrier",
                                                "MPI_Igather",
+                                               "MPI_Igatherv",
                                                "MPI_Init",
                                                "MPI_Ibsend",
                                                "MPI_Irsend",
@@ -590,6 +593,14 @@ int RookieHPC_MPI_Igather(void* buffer_send, int count_send, MPI_Datatype dataty
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IGATHER, file, line, args);
     int result = MPI_Igather(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, root, communicator, request);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IGATHER, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Igatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IGATHERV, file, line, args);
+    int result = MPI_Igatherv(buffer_send, count_send, datatype_send, buffer_recv, counts_recv, displacements, datatype_recv, root, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IGATHERV, file, line, args);
     return result;
 }
 
