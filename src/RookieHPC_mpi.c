@@ -79,6 +79,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_IALLGATHER,
                                     /// The message is sent about MPI_Iallgatherv
                                     ROOKIEHPC_MESSAGE_IALLGATHERV,
+                                    /// The message is sent about MPI_Iallreduce
+                                    ROOKIEHPC_MESSAGE_IALLREDUCE,
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
                                     /// The message is sent about MPI_Ibsend
@@ -129,6 +131,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Get_address",
                                                "MPI_Iallgather",
                                                "MPI_Iallgatherv",
+                                               "MPI_Iallreduce",
                                                "MPI_Init",
                                                "MPI_Ibsend",
                                                "MPI_Irsend",
@@ -521,6 +524,13 @@ void RookieHPC_MPI_Iallgatherv(void* buffer_send, int count_send, MPI_Datatype d
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IALLGATHERV, file, line, args);
     MPI_Iallgatherv(buffer_send, count_send, datatype_send, buffer_recv, counts_recv, displacements, datatype_recv, communicator, request);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IALLGATHERV, file, line, args);
+}
+
+void RookieHPC_MPI_Iallreduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IALLREDUCE, file, line, args);
+    MPI_Iallreduce(send_buffer, receive_buffer, count, datatype, operation, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IALLREDUCE, file, line, args);
 }
 
 void RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const char* args)
