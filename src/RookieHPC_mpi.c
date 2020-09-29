@@ -87,14 +87,14 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_IALLTOALLV,
                                     /// The message is sent about MPI_Ibarrier
                                     ROOKIEHPC_MESSAGE_IBARRIER,
+                                    /// The message is sent about MPI_Ibsend
+                                    ROOKIEHPC_MESSAGE_IBSEND,
                                     /// The message is sent about MPI_Igather
                                     ROOKIEHPC_MESSAGE_IGATHER,
                                     /// The message is sent about MPI_Igatherv
                                     ROOKIEHPC_MESSAGE_IGATHERV,
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
-                                    /// The message is sent about MPI_Ibsend
-                                    ROOKIEHPC_MESSAGE_IBSEND,
                                     /// The message is sent about MPI_Irsend
                                     ROOKIEHPC_MESSAGE_IRSEND,
                                     /// The message is sent about MPI_Isend
@@ -145,10 +145,10 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Ialltoall",
                                                "MPI_Ialltoallv",
                                                "MPI_Ibarrier",
+                                               "MPI_Ibsend",
                                                "MPI_Igather",
                                                "MPI_Igatherv",
                                                "MPI_Init",
-                                               "MPI_Ibsend",
                                                "MPI_Irsend",
                                                "MPI_Isend",
                                                "MPI_Issend",
