@@ -49,6 +49,8 @@ enum RookieHPC_monitoring_message_temporality_t { ROOKIEHPC_TEMPORALITY_BEFORE,
 /// Indicates from which MPI call the message was issued
 enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_ABORT,
+                                    /// The message is sent about MPI_Accumulate
+                                    ROOKIEHPC_MESSAGE_ACCUMULATE,
                                     /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_ALLGATHER,
                                     /// The message is sent about MPI_Allgatherv
@@ -156,6 +158,7 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
 
 /// Contains the name of the MPI function matching to a message type
 const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
+                                               "MPI_Accumulate",
                                                "MPI_Allgather",
                                                "MPI_Allgatherv",
                                                "MPI_Allreduce",
@@ -473,6 +476,14 @@ int RookieHPC_MPI_Abort(MPI_Comm communicator, int error_code, char* file, int l
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ABORT, file, line, args);
     int result = MPI_Abort(communicator, error_code);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ABORT, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Accumulate(const void* origin_address, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_displacement, int target_count, MPI_Datatype target_datatype, MPI_Op operation, MPI_Win window, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ACCUMULATE, file, line, args);
+    int result = MPI_Accumulate(origin_address, origin_count, origin_datatype, target_rank, target_displacement, target_count, target_datatype, operation, window);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ACCUMULATE, file, line, args);
     return result;
 }
 

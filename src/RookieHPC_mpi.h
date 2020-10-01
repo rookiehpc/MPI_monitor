@@ -14,6 +14,7 @@
 ///////////////////////////////////////
 
 int RookieHPC_MPI_Abort(MPI_Comm communicator, int error_code, char* file, int line, const char* args);
+int RookieHPC_MPI_Accumulate(const void* origin_address, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_displacement, int target_count, MPI_Datatype target_datatype, MPI_Op operation, MPI_Win window, char* file, int line, const char* args);
 int RookieHPC_MPI_Allgather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Allgatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Allreduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
@@ -73,6 +74,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #ifndef ROOKIEHPC_MPI_NO_SUBSTITUTION
 /// Redirects calls from MPI_Abort to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Abort(...) RookieHPC_MPI_Abort(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Accumulate to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Accumulate(...) RookieHPC_MPI_Accumulate(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Allgather to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Allgather(...) RookieHPC_MPI_Allgather(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Allgatherv to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
