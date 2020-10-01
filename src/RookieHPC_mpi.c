@@ -146,7 +146,9 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     /// The message is sent about MPI_Waitany
                                     ROOKIEHPC_MESSAGE_WAITANY,
                                     /// The message is sent about MPI_Waitsome
-                                    ROOKIEHPC_MESSAGE_WAITSOME };
+                                    ROOKIEHPC_MESSAGE_WAITSOME,
+                                    /// The message is sent about MPI_Wtime
+                                    ROOKIEHPC_MESSAGE_WTIME };
 
 /// Contains the name of the MPI function matching to a message type
 const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
@@ -198,7 +200,8 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Wait",
                                                "MPI_Waitall",
                                                "MPI_Waitany",
-                                               "MPI_Waitsome" };
+                                               "MPI_Waitsome",
+                                               "MPI_Wtime" };
 
 /// Contains the message representing an update to the debugger
 struct RookieHPC_MPI_message_t
@@ -897,5 +900,13 @@ int RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* index
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WAITSOME, file, line, args);
     int result = MPI_Waitsome(request_count, requests, index_count, indices, statuses);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WAITSOME, file, line, args);
+    return result;
+}
+
+double RookieHPC_MPI_Wtime(char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WTIME, file, line, args);
+    double result = MPI_Wtime();
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WTIME, file, line, args);
     return result;
 }

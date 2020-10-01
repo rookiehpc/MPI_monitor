@@ -62,6 +62,7 @@ int RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int
 int RookieHPC_MPI_Waitall(int count, MPI_Request requests[], MPI_Status statuses[], char* file, int line, const char* args);
 int RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* index_count, int indices[], MPI_Status statuses[], char* file, int line, const char* args);
+double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 
 //////////////////////////////////////////////
 // DEFINES TO BYPASS ORIGINAL MPI ROUTINES //
@@ -166,6 +167,8 @@ int RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* index
 #define MPI_Waitany(...) RookieHPC_MPI_Waitany(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Waitsome to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Waitsome(...) RookieHPC_MPI_Waitsome(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Wtime to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Wtime(...) RookieHPC_MPI_Wtime(__FILE__, __LINE__, #__VA_ARGS__)
 #endif // ROOKIEHPC_MPI_NO_SUBSTITUTION
 
 #endif // ROOKIEHPC_MPI_H_INCLUDED
