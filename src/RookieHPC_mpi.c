@@ -105,6 +105,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_IRSEND,
                                     /// The message is sent about MPI_Iscatter
                                     ROOKIEHPC_MESSAGE_ISCATTER,
+                                    /// The message is sent about MPI_Iscatterv
+                                    ROOKIEHPC_MESSAGE_ISCATTERV,
                                     /// The message is sent about MPI_Isend
                                     ROOKIEHPC_MESSAGE_ISEND,
                                     /// The message is sent about MPI_Issend
@@ -162,6 +164,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Ireduce_scatter_block",
                                                "MPI_Irsend",
                                                "MPI_Iscatter",
+                                               "MPI_Iscatterv",
                                                "MPI_Isend",
                                                "MPI_Issend",
                                                "MPI_Recv",
@@ -713,6 +716,14 @@ int RookieHPC_MPI_Iscatter(const void* buffer_send, int count_send, MPI_Datatype
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ISCATTER, file, line, args);
     int result = MPI_Iscatter(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, root, communicator, request);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ISCATTER, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Iscatterv(const void* buffer_send, const int counts_send[], const int displacements[], MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ISCATTERV, file, line, args);
+    int result = MPI_Iscatterv(buffer_send, counts_send, displacements, datatype_send, buffer_recv, count_recv, datatype_recv, root, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ISCATTERV, file, line, args);
     return result;
 }
 
