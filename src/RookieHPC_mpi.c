@@ -96,6 +96,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
                                     /// The message is sent about MPI_Irsend
+                                    ROOKIEHPC_MESSAGE_IREDUCE,
+                                    /// The message is sent about MPI_Ireduce
                                     ROOKIEHPC_MESSAGE_IRSEND,
                                     /// The message is sent about MPI_Isend
                                     ROOKIEHPC_MESSAGE_ISEND,
@@ -149,6 +151,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Igather",
                                                "MPI_Igatherv",
                                                "MPI_Init",
+                                               "MPI_Ireduce",
                                                "MPI_Irsend",
                                                "MPI_Isend",
                                                "MPI_Issend",
@@ -661,6 +664,14 @@ int RookieHPC_MPI_Ibsend(void* buffer, int count, MPI_Datatype type, int dst, in
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
     int result = MPI_Ibsend(buffer, count, type, dst, tag, comm, request);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Ireduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, int root, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IREDUCE, file, line, args);
+    int result = MPI_Ireduce(send_buffer, receive_buffer, count, datatype, operation, root, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IREDUCE, file, line, args);
     return result;
 }
 
