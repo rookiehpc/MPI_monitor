@@ -99,6 +99,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_INITIALISED,
                                     /// The message is sent about MPI_Iprobe
                                     ROOKIEHPC_MESSAGE_IPROBE,
+                                    /// The message is sent about MPI_Irecv
+                                    ROOKIEHPC_MESSAGE_IRECV,
                                     /// The message is sent about MPI_Ireduce
                                     ROOKIEHPC_MESSAGE_IREDUCE,
                                     /// The message is sent about MPI_Ireduce_scatter
@@ -179,6 +181,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Igatherv",
                                                "MPI_Init",
                                                "MPI_Iprobe",
+                                               "MPI_Irecv",
                                                "MPI_Ireduce",
                                                "MPI_Ireduce_scatter",
                                                "MPI_Ireduce_scatter_block",
@@ -719,6 +722,14 @@ int RookieHPC_MPI_Iprobe(int source, int tag, MPI_Comm communicator, int* flag, 
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IPROBE, file, line, args);
     int result = MPI_Iprobe(source, tag, communicator, flag, status);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IPROBE, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Irecv(void* buffer, int count, MPI_Datatype datatype, int sender, int tag, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IRECV, file, line, args);
+    int result = MPI_Irecv(buffer, count, datatype, sender, tag, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IRECV, file, line, args);
     return result;
 }
 
