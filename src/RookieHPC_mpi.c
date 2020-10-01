@@ -77,6 +77,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_GATHER,
                                     /// The message is sent about MPI_Gatherv
                                     ROOKIEHPC_MESSAGE_GATHERV,
+                                    /// The message is sent about MPI_Get
+                                    ROOKIEHPC_MESSAGE_GET,
                                     /// The message is sent about MPI_Get_address
                                     ROOKIEHPC_MESSAGE_GET_ADDRESS,
                                     /// The message is sent about MPI_Iallgather
@@ -172,6 +174,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Finalize",
                                                "MPI_Gather",
                                                "MPI_Gatherv",
+                                               "MPI_Get",
                                                "MPI_Get_address",
                                                "MPI_Iallgather",
                                                "MPI_Iallgatherv",
@@ -593,6 +596,14 @@ int RookieHPC_MPI_Gatherv(void* buffer_send, int count_send, MPI_Datatype dataty
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GATHERV, file, line, args);
     int result = MPI_Gatherv(buffer_send, count_send, datatype_send, buffer_recv, counts_recv, displacements, datatype_recv, root, communicator);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GATHERV, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Get(void* origin_address, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_displacement, int target_count, MPI_Datatype target_datatype, MPI_Win window, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GET, file, line, args);
+    int result = MPI_Get(origin_address, origin_count, origin_datatype, target_rank, target_displacement, target_count, target_datatype, window);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GET, file, line, args);
     return result;
 }
 
