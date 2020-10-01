@@ -773,6 +773,14 @@ int RookieHPC_MPI_Reduce_scatter(const void* send_buffer, void* receive_buffer, 
     return result;
 }
 
+int RookieHPC_MPI_Rsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
+    int result = MPI_Rsend(buffer, count, type, dst, tag, comm);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
+    return result;
+}
+
 int RookieHPC_MPI_Send(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
 {
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SEND, file, line, args);
@@ -794,14 +802,6 @@ int RookieHPC_MPI_Sendrecv_replace(void* buffer, int count_send, MPI_Datatype da
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SENDRECV_REPLACE, file, line, args);
     int result = MPI_Sendrecv_replace(buffer, count_send, datatype_send, recipient, tag_send, sender, tag_recv, communicator, status);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SENDRECV_REPLACE, file, line, args);
-    return result;
-}
-
-int RookieHPC_MPI_Rsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args)
-{
-    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
-    int result = MPI_Rsend(buffer, count, type, dst, tag, comm);
-    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
     return result;
 }
 
