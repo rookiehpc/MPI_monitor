@@ -117,6 +117,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_REDUCE,
                                     /// The message is sent about MPI_Reduce_scatter
                                     ROOKIEHPC_MESSAGE_REDUCE_SCATTER,
+                                    /// The message is sent about MPI_Reduce_scatter_block
+                                    ROOKIEHPC_MESSAGE_REDUCE_SCATTER_BLOCK,
                                     /// The message is sent about MPI_Rsend
                                     ROOKIEHPC_MESSAGE_RSEND,
                                     /// The message is sent about MPI_Send
@@ -174,6 +176,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Recv",
                                                "MPI_Reduce",
                                                "MPI_Reduce_scatter",
+                                               "MPI_Reduce_scatter_block",
                                                "MPI_Rsend",
                                                "MPI_Send",
                                                "MPI_Sendrecv",
@@ -770,6 +773,14 @@ int RookieHPC_MPI_Reduce_scatter(const void* send_buffer, void* receive_buffer, 
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_REDUCE_SCATTER, file, line, args);
     int result = MPI_Reduce_scatter(send_buffer, receive_buffer, counts, datatype, operation, communicator);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_REDUCE_SCATTER, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Reduce_scatter_block(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_REDUCE_SCATTER_BLOCK, file, line, args);
+    int result = MPI_Reduce_scatter_block(send_buffer, receive_buffer, count, datatype, operation, communicator);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_REDUCE_SCATTER_BLOCK, file, line, args);
     return result;
 }
 
