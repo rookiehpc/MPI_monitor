@@ -95,9 +95,9 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_IGATHERV,
                                     /// The message is sent about MPI_Init
                                     ROOKIEHPC_MESSAGE_INITIALISED,
-                                    /// The message is sent about MPI_Irsend
-                                    ROOKIEHPC_MESSAGE_IREDUCE,
                                     /// The message is sent about MPI_Ireduce
+                                    ROOKIEHPC_MESSAGE_IREDUCE,
+                                    /// The message is sent about MPI_Irsend
                                     ROOKIEHPC_MESSAGE_IRSEND,
                                     /// The message is sent about MPI_Isend
                                     ROOKIEHPC_MESSAGE_ISEND,
