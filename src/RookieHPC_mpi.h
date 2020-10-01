@@ -38,6 +38,7 @@ int RookieHPC_MPI_Igather(void* buffer_send, int count_send, MPI_Datatype dataty
 int RookieHPC_MPI_Igatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const char* args);
 int RookieHPC_MPI_Ireduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, int root, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
+int RookieHPC_MPI_Ireduce_scatter(const void* send_buffer, void* receive_buffer, int* counts, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Irsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Isend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Issend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
@@ -107,6 +108,8 @@ int RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* index
 #define MPI_Init(...) RookieHPC_MPI_Init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Ireduce to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Ireduce(...) RookieHPC_MPI_Ireduce(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Ireduce_scatter to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Ireduce_scatter(...) RookieHPC_MPI_Ireduce_scatter(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Irsend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Irsend(...) RookieHPC_MPI_Irsend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Isend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
