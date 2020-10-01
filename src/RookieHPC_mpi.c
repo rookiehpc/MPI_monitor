@@ -47,7 +47,9 @@ enum RookieHPC_monitoring_message_temporality_t { ROOKIEHPC_TEMPORALITY_BEFORE,
                                                   ROOKIEHPC_TEMPORALITY_AFTER };
 
 /// Indicates from which MPI call the message was issued
-enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
+enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
+                                    ROOKIEHPC_MESSAGE_ABORT,
+                                    /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_ALLGATHER,
                                     /// The message is sent about MPI_Allgatherv
                                     ROOKIEHPC_MESSAGE_ALLGATHERV,
@@ -147,7 +149,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_WAITSOME };
 
 /// Contains the name of the MPI function matching to a message type
-const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
+const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
+                                               "MPI_Allgather",
                                                "MPI_Allgatherv",
                                                "MPI_Allreduce",
                                                "MPI_Alltoall",
@@ -454,6 +457,14 @@ static void* RookieHPC_manager()
     }
 
     return NULL;
+}
+
+int RookieHPC_MPI_Abort(MPI_Comm communicator, int error_code, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ABORT, file, line, args);
+    int result = MPI_Abort(communicator, error_code);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ABORT, file, line, args);
+    return result;
 }
 
 int RookieHPC_MPI_Allgather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, char* file, int line, const char* args)
