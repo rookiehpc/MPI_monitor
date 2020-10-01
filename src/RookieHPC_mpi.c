@@ -591,6 +591,14 @@ int RookieHPC_MPI_Ibarrier(MPI_Comm communicator, MPI_Request* request, char* fi
     return result;
 }
 
+int RookieHPC_MPI_Ibsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
+    int result = MPI_Ibsend(buffer, count, type, dst, tag, comm, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
+    return result;
+}
+
 int RookieHPC_MPI_Igather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
 {
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IGATHER, file, line, args);
@@ -656,14 +664,6 @@ int RookieHPC_MPI_Init(int* argc, char*** argv, char* file, int line, const char
     // All wait for the process 0 to tell us the initialisation is complete and successful
     MPI_Barrier(MPI_COMM_WORLD);
 
-    return result;
-}
-
-int RookieHPC_MPI_Ibsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args)
-{
-    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
-    int result = MPI_Ibsend(buffer, count, type, dst, tag, comm, request);
-    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_IBSEND, file, line, args);
     return result;
 }
 
