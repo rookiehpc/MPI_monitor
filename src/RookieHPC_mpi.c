@@ -113,6 +113,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_ISSEND,
                                     /// The message is sent about MPI_Recv
                                     ROOKIEHPC_MESSAGE_RECV,
+                                    /// The message is sent about MPI_Reduce
+                                    ROOKIEHPC_MESSAGE_REDUCE,
                                     /// The message is sent about MPI_Rsend
                                     ROOKIEHPC_MESSAGE_RSEND,
                                     /// The message is sent about MPI_Send
@@ -168,6 +170,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Isend",
                                                "MPI_Issend",
                                                "MPI_Recv",
+                                               "MPI_Reduce",
                                                "MPI_Rsend",
                                                "MPI_Send",
                                                "MPI_Sendrecv",
@@ -748,6 +751,14 @@ int RookieHPC_MPI_Recv(void* buffer, int count, MPI_Datatype type, int source, i
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RECV, file, line, args);
     int result = MPI_Recv(buffer, count, type, source, tag, comm, status);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RECV, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Reduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, int root, MPI_Comm communicator, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_REDUCE, file, line, args);
+    int result = MPI_Reduce(send_buffer, receive_buffer, count, datatype, operation, root, communicator);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_REDUCE, file, line, args);
     return result;
 }
 
