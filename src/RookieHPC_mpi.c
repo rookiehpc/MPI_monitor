@@ -123,6 +123,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Allgather
                                     ROOKIEHPC_MESSAGE_RSEND,
                                     /// The message is sent about MPI_Scan
                                     ROOKIEHPC_MESSAGE_SCAN,
+                                    /// The message is sent about MPI_Scatter
+                                    ROOKIEHPC_MESSAGE_SCATTER,
                                     /// The message is sent about MPI_Send
                                     ROOKIEHPC_MESSAGE_SEND,
                                     /// The message is sent about MPI_Sendrecv
@@ -181,6 +183,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Allgather",
                                                "MPI_Reduce_scatter_block",
                                                "MPI_Rsend",
                                                "MPI_Scan",
+                                               "MPI_Scatter",
                                                "MPI_Send",
                                                "MPI_Sendrecv",
                                                "MPI_Sendrecv_replace",
@@ -800,6 +803,14 @@ int RookieHPC_MPI_Scan(void* send_buffer, void* receive_buffer, int count, MPI_D
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SCAN, file, line, args);
     int result = MPI_Scan(send_buffer, receive_buffer, count, datatype, operation, communicator);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SCAN, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Scatter(const void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SCATTER, file, line, args);
+    int result = MPI_Scatter(buffer_send, count_send, datatype_send, buffer_recv, count_recv, datatype_recv, root, communicator);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SCATTER, file, line, args);
     return result;
 }
 
