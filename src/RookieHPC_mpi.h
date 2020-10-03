@@ -68,6 +68,7 @@ int RookieHPC_MPI_Waitall(int count, MPI_Request requests[], MPI_Status statuses
 int RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Waitsome(int request_count, MPI_Request requests[], int* index_count, int indices[], MPI_Status statuses[], char* file, int line, const char* args);
 int RookieHPC_MPI_Win_allocate(MPI_Aint size, int displacement_unit, MPI_Info info, MPI_Comm communicator, void* base, MPI_Win* window, char* file, int line, const char* args);
+int RookieHPC_MPI_Win_attach(MPI_Win window, void* base, MPI_Aint size, char* file, int line, const char* args);
 double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 
 //////////////////////////////////////////////
@@ -185,6 +186,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Waitsome(...) RookieHPC_MPI_Waitsome(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Win_allocate to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Win_allocate(...) RookieHPC_MPI_Win_allocate(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Win_attach to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Win_attach(...) RookieHPC_MPI_Win_attach(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Wtime to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Wtime(...) RookieHPC_MPI_Wtime(__FILE__, __LINE__, #__VA_ARGS__)
 #endif // ROOKIEHPC_MPI_NO_SUBSTITUTION
