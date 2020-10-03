@@ -127,6 +127,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_PUT,
                                     /// The message is sent about MPI_Recv
                                     ROOKIEHPC_MESSAGE_RECV,
+                                    /// The message is sent about MPI_Recv_init
+                                    ROOKIEHPC_MESSAGE_RECV_INIT,
                                     /// The message is sent about MPI_Reduce
                                     ROOKIEHPC_MESSAGE_REDUCE,
                                     /// The message is sent about MPI_Reduce_scatter
@@ -215,6 +217,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Issend",
                                                "MPI_Put",
                                                "MPI_Recv",
+                                               "MPI_Recv_init",
                                                "MPI_Reduce",
                                                "MPI_Reduce_scatter",
                                                "MPI_Reduce_scatter_block",
@@ -864,6 +867,14 @@ int RookieHPC_MPI_Recv(void* buffer, int count, MPI_Datatype type, int source, i
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RECV, file, line, args);
     int result = MPI_Recv(buffer, count, type, source, tag, comm, status);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RECV, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Recv_init(void* buffer, int count, MPI_Datatype datatype, int sender, int tag, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RECV_INIT, file, line, args);
+    int result = MPI_Recv_init(buffer, count, datatype, sender, tag, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RECV_INIT, file, line, args);
     return result;
 }
 

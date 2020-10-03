@@ -53,6 +53,7 @@ int RookieHPC_MPI_Isend(void* buffer, int count, MPI_Datatype type, int dst, int
 int RookieHPC_MPI_Issend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Put(const void* origin_address, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_displacement, int target_count, MPI_Datatype target_datatype, MPI_Win window, char* file, int line, const char* args);
 int RookieHPC_MPI_Recv(void* buffer, int count, MPI_Datatype type, int source, int tag, MPI_Comm comm, MPI_Status* status, char* file, int line, const char* args);
+int RookieHPC_MPI_Recv_init(void* buffer, int count, MPI_Datatype datatype, int sender, int tag, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Reduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, int root, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Reduce_scatter(const void* send_buffer, void* receive_buffer, int* counts, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Reduce_scatter_block(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
@@ -161,6 +162,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Put(...) RookieHPC_MPI_Put(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Recv to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Recv(...) RookieHPC_MPI_Recv(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Recv_init to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Recv_init(...) RookieHPC_MPI_Recv_init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Reduce to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Reduce(...) RookieHPC_MPI_Reduce(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Reduce_scatter to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
