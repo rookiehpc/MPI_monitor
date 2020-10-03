@@ -71,6 +71,7 @@ int RookieHPC_MPI_Win_allocate(MPI_Aint size, int displacement_unit, MPI_Info in
 int RookieHPC_MPI_Win_attach(MPI_Win window, void* base, MPI_Aint size, char* file, int line, const char* args);
 int RookieHPC_MPI_Win_create(void* base, MPI_Aint size, int displacement_unit, MPI_Info info, MPI_Comm communicator, MPI_Win* window, char* file, int line, const char* args);
 int RookieHPC_MPI_Win_create_dynamic(MPI_Info info, MPI_Comm communicator, MPI_Win* window, char* file, int line, const char* args);
+int RookieHPC_MPI_Win_detach(MPI_Win window, const void* base, char* file, int line, const char* args);
 double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 
 //////////////////////////////////////////////
@@ -194,6 +195,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Win_create(...) RookieHPC_MPI_Win_create(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Win_create_dynamic to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Win_create_dynamic(...) RookieHPC_MPI_Win_create_dynamic(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Win_detach to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Win_detach(...) RookieHPC_MPI_Win_detach(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Wtime to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Wtime(...) RookieHPC_MPI_Wtime(__FILE__, __LINE__, #__VA_ARGS__)
 #endif // ROOKIEHPC_MPI_NO_SUBSTITUTION
