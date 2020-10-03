@@ -147,6 +147,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_SCATTERV,
                                     /// The message is sent about MPI_Send
                                     ROOKIEHPC_MESSAGE_SEND,
+                                    /// The message is sent about MPI_Send_init
+                                    ROOKIEHPC_MESSAGE_SEND_INIT,
                                     /// The message is sent about MPI_Sendrecv
                                     ROOKIEHPC_MESSAGE_SENDRECV,
                                     /// The message is sent about MPI_Sendrecv_replace
@@ -229,6 +231,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Scatter",
                                                "MPI_Scatterv",
                                                "MPI_Send",
+                                               "MPI_Send_init",
                                                "MPI_Sendrecv",
                                                "MPI_Sendrecv_replace",
                                                "MPI_Ssend",
@@ -950,6 +953,14 @@ int RookieHPC_MPI_Send(void* buffer, int count, MPI_Datatype type, int dst, int 
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SEND, file, line, args);
     int result = MPI_Send(buffer, count, type, dst, tag, comm);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SEND, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Send_init(const void* buffer, int count, MPI_Datatype datatype, int recipient, int tag, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_SEND_INIT, file, line, args);
+    int result = MPI_Send_init(buffer, count, datatype, recipient, tag, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_SEND_INIT, file, line, args);
     return result;
 }
 
