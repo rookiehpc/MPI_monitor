@@ -58,6 +58,7 @@ int RookieHPC_MPI_Reduce(const void* send_buffer, void* receive_buffer, int coun
 int RookieHPC_MPI_Reduce_scatter(const void* send_buffer, void* receive_buffer, int* counts, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Reduce_scatter_block(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Rsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args);
+int RookieHPC_MPI_Rsend_init(const void* buffer, int count, MPI_Datatype datatype, int recipient, int tag, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Scan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Scatter(const void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Scatterv(const void* buffer_send, const int counts_send[], const int displacements[], MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args);
@@ -172,6 +173,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Reduce_scatter_block(...) RookieHPC_MPI_Reduce_scatter_block(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Rsend to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Rsend(...) RookieHPC_MPI_Rsend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Rsend_init to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Rsend_init(...) RookieHPC_MPI_Rsend_init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Scan to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Scan(...) RookieHPC_MPI_Scan(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Scatter to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued

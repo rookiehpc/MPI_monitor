@@ -137,6 +137,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_REDUCE_SCATTER_BLOCK,
                                     /// The message is sent about MPI_Rsend
                                     ROOKIEHPC_MESSAGE_RSEND,
+                                    /// The message is sent about MPI_Rsend_init
+                                    ROOKIEHPC_MESSAGE_RSEND_INIT,
                                     /// The message is sent about MPI_Scan
                                     ROOKIEHPC_MESSAGE_SCAN,
                                     /// The message is sent about MPI_Scatter
@@ -222,6 +224,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Reduce_scatter",
                                                "MPI_Reduce_scatter_block",
                                                "MPI_Rsend",
+                                               "MPI_Rsend_init",
                                                "MPI_Scan",
                                                "MPI_Scatter",
                                                "MPI_Scatterv",
@@ -907,6 +910,14 @@ int RookieHPC_MPI_Rsend(void* buffer, int count, MPI_Datatype type, int dst, int
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
     int result = MPI_Rsend(buffer, count, type, dst, tag, comm);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RSEND, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Rsend_init(const void* buffer, int count, MPI_Datatype datatype, int recipient, int tag, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_RSEND_INIT, file, line, args);
+    int result = MPI_Rsend_init(buffer, count, datatype, recipient, tag, communicator, request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_RSEND_INIT, file, line, args);
     return result;
 }
 
