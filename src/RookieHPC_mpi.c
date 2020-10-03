@@ -161,6 +161,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_WIN_ALLOCATE,
                                     /// The message is sent about MPI_Win_attach
                                     ROOKIEHPC_MESSAGE_WIN_ATTACH,
+                                    /// The message is sent about MPI_Win_create
+                                    ROOKIEHPC_MESSAGE_WIN_CREATE,
                                     /// The message is sent about MPI_Wtime
                                     ROOKIEHPC_MESSAGE_WTIME };
 
@@ -222,6 +224,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Waitsome",
                                                "MPI_Win_allocate",
                                                "MPI_Win_attach",
+                                               "MPI_Win_create",
                                                "MPI_Wtime" };
 
 /// Contains the message representing an update to the debugger
@@ -977,6 +980,14 @@ int RookieHPC_MPI_Win_attach(MPI_Win window, void* base, MPI_Aint size, char* fi
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WIN_ATTACH, file, line, args);
     int result = MPI_Win_attach(window, base, size);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WIN_ATTACH, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Win_create(void* base, MPI_Aint size, int displacement_unit, MPI_Info info, MPI_Comm communicator, MPI_Win* window, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_WIN_CREATE, file, line, args);
+    int result = MPI_Win_create(base, size, displacement_unit, info, communicator, window);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_WIN_CREATE, file, line, args);
     return result;
 }
 
