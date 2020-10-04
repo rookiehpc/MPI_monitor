@@ -125,6 +125,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_ISEND,
                                     /// The message is sent about MPI_Issend
                                     ROOKIEHPC_MESSAGE_ISSEND,
+                                    /// The message is sent about MPI_Probe
+                                    ROOKIEHPC_MESSAGE_PROBE,
                                     /// The message is sent about MPI_Put
                                     ROOKIEHPC_MESSAGE_PUT,
                                     /// The message is sent about MPI_Recv
@@ -228,6 +230,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Iscatterv",
                                                "MPI_Isend",
                                                "MPI_Issend",
+                                               "MPI_Probe",
                                                "MPI_Put",
                                                "MPI_Recv",
                                                "MPI_Recv_init",
@@ -877,6 +880,14 @@ int RookieHPC_MPI_Issend(void* buffer, int count, MPI_Datatype type, int dst, in
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_ISSEND, file, line, args);
     int result = MPI_Issend(buffer, count, type, dst, tag, comm, request);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_ISSEND, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Probe(int source, int tag, MPI_Comm communicator, MPI_Status* status, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_PROBE, file, line, args);
+    int result = MPI_Probe(source, tag, communicator, status);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_PROBE, file, line, args);
     return result;
 }
 
