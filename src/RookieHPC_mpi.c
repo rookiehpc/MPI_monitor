@@ -83,6 +83,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_GET,
                                     /// The message is sent about MPI_Get_address
                                     ROOKIEHPC_MESSAGE_GET_ADDRESS,
+                                    /// The message is sent about MPI_Get_count
+                                    ROOKIEHPC_MESSAGE_GET_COUNT,
                                     /// The message is sent about MPI_Iallgather
                                     ROOKIEHPC_MESSAGE_IALLGATHER,
                                     /// The message is sent about MPI_Iallgatherv
@@ -205,6 +207,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Gatherv",
                                                "MPI_Get",
                                                "MPI_Get_address",
+                                               "MPI_Get_count",
                                                "MPI_Iallgather",
                                                "MPI_Iallgatherv",
                                                "MPI_Iallreduce",
@@ -662,6 +665,14 @@ int RookieHPC_MPI_Get_address(const void* location, MPI_Aint* address, char* fil
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GET_ADDRESS, file, line, args);
     int result = MPI_Get_address(location, address);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GET_ADDRESS, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Get_count(const MPI_Status* status, MPI_Datatype datatype, int* count, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GET_COUNT, file, line, args);
+    int result = MPI_Get_count(status, datatype, count);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GET_COUNT, file, line, args);
     return result;
 }
 
