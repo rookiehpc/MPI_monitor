@@ -69,6 +69,7 @@ int RookieHPC_MPI_Sendrecv_replace(void* buffer, int count_send, MPI_Datatype da
 int RookieHPC_MPI_Ssend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args);
 int RookieHPC_MPI_Ssend_init(const void* buffer, int count, MPI_Datatype datatype, int recipient, int tag, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Start(MPI_Request* request, char* file, int line, const char* args);
+int RookieHPC_MPI_Startall(int count, MPI_Request requests[], char* file, int line, const char* args);
 int RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Waitall(int count, MPI_Request requests[], MPI_Status statuses[], char* file, int line, const char* args);
 int RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_Status* status, char* file, int line, const char* args);
@@ -198,6 +199,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Ssend_init(...) RookieHPC_MPI_Ssend_init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Start to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Start(...) RookieHPC_MPI_Start(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Startall to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Startall(...) RookieHPC_MPI_Startall(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Wait to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Wait(...) RookieHPC_MPI_Wait(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Waitall to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
