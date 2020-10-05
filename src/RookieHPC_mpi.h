@@ -53,6 +53,7 @@ int RookieHPC_MPI_Iscatterv(const void* buffer_send, const int counts_send[], co
 int RookieHPC_MPI_Isend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Issend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Op_create(MPI_User_function* user_function, int commutativity, MPI_Op* handle, char* file, int line, const char* args);
+int RookieHPC_MPI_Op_free(MPI_Op* handle, char* file, int line, const char* args);
 int RookieHPC_MPI_Probe(int source, int tag, MPI_Comm communicator, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Put(const void* origin_address, int origin_count, MPI_Datatype origin_datatype, int target_rank, MPI_Aint target_displacement, int target_count, MPI_Datatype target_datatype, MPI_Win window, char* file, int line, const char* args);
 int RookieHPC_MPI_Recv(void* buffer, int count, MPI_Datatype type, int source, int tag, MPI_Comm comm, MPI_Status* status, char* file, int line, const char* args);
@@ -170,6 +171,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Issend(...) RookieHPC_MPI_Issend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Op_create to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Op_create(...) RookieHPC_MPI_Op_create(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Op_free to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Op_free(...) RookieHPC_MPI_Op_free(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Probe to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Probe(...) RookieHPC_MPI_Probe(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Put to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
