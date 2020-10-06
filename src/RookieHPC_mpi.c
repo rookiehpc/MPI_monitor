@@ -173,6 +173,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_TEST,
                                     /// The message is sent about MPI_Testall
                                     ROOKIEHPC_MESSAGE_TESTALL,
+                                    /// The message is sent about MPI_Testany
+                                    ROOKIEHPC_MESSAGE_TESTANY,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -262,6 +264,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Startall",
                                                "MPI_Test",
                                                "MPI_Testall",
+                                               "MPI_Testany",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1084,6 +1087,14 @@ int RookieHPC_MPI_Testall(int count, MPI_Request* requests, int* flag, MPI_Statu
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TESTALL, file, line, args);
     int result = MPI_Testall(count, requests, flag, statuses);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TESTALL, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Testany(int count, MPI_Request* requests, int* index, int* flag, MPI_Status* status, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TESTANY, file, line, args);
+    int result = MPI_Testany(count, requests, index, flag, status);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TESTANY, file, line, args);
     return result;
 }
 
