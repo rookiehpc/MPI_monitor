@@ -175,6 +175,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_TESTALL,
                                     /// The message is sent about MPI_Testany
                                     ROOKIEHPC_MESSAGE_TESTANY,
+                                    /// The message is sent about MPI_Testsome
+                                    ROOKIEHPC_MESSAGE_TESTSOME,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -265,6 +267,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Test",
                                                "MPI_Testall",
                                                "MPI_Testany",
+                                               "MPI_Testsome",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1095,6 +1098,14 @@ int RookieHPC_MPI_Testany(int count, MPI_Request* requests, int* index, int* fla
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TESTANY, file, line, args);
     int result = MPI_Testany(count, requests, index, flag, status);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TESTANY, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Testsome(int count, MPI_Request* requests, int* index_count, int* indexes, MPI_Status* statuses, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TESTSOME, file, line, args);
+    int result = MPI_Testsome(count, requests, index_count, indexes, statuses);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TESTSOME, file, line, args);
     return result;
 }
 
