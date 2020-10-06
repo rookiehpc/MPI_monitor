@@ -171,6 +171,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_STARTALL,
                                     /// The message is sent about MPI_Test
                                     ROOKIEHPC_MESSAGE_TEST,
+                                    /// The message is sent about MPI_Testall
+                                    ROOKIEHPC_MESSAGE_TESTALL,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -259,6 +261,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Start",
                                                "MPI_Startall",
                                                "MPI_Test",
+                                               "MPI_Testall",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1073,6 +1076,14 @@ int RookieHPC_MPI_Test(MPI_Request* request, int* flag, MPI_Status* status, char
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TEST, file, line, args);
     int result = MPI_Test(request, flag, status);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TEST, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Testall(int count, MPI_Request* requests, int* flag, MPI_Status* statuses, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TESTALL, file, line, args);
+    int result = MPI_Testall(count, requests, flag, statuses);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TESTALL, file, line, args);
     return result;
 }
 
