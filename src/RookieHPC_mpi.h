@@ -24,6 +24,7 @@ int RookieHPC_MPI_Barrier(MPI_Comm comm, char* file, int line, const char* args)
 int RookieHPC_MPI_Bcast(void* buffer, int count, MPI_Datatype datatype, int emitter_rank, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Bsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args);
 int RookieHPC_MPI_Bsend_init(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
+int RookieHPC_MPI_Cart_coords(MPI_Comm communicator, int rank, int dimension_number, int* coords, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MPI_Comm* new_communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Exscan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Finalize(char* file, int line);
@@ -117,6 +118,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Bsend(...) RookieHPC_MPI_Bsend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Bsend_init to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Bsend_init(...) RookieHPC_MPI_Bsend_init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Card_coords to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Card_coords(...) RookieHPC_MPI_Cart_coords(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Comm_split to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Comm_split(...) RookieHPC_MPI_Comm_split(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Exscan to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
