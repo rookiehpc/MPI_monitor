@@ -73,6 +73,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_CART_COORDS,
                                     /// The message is sent about MPI_Cart_create
                                     ROOKIEHPC_MESSAGE_CART_CREATE,
+                                    /// The message is sent about MPI_Cart_get
+                                    ROOKIEHPC_MESSAGE_CART_GET,
                                     /// The message is sent about MPI_Comm_split
                                     ROOKIEHPC_MESSAGE_COMM_SPLIT,
                                     /// The message is sent about MPI_Exscan
@@ -220,6 +222,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Bsend_init",
                                                "MPI_Cart_coords",
                                                "MPI_Cart_create",
+                                               "MPI_Cart_get",
                                                "MPI_Comm_split",
                                                "MPI_Exscan",
                                                "MPI_Finalize",
@@ -647,6 +650,14 @@ int RookieHPC_MPI_Cart_create(MPI_Comm old_communicator, int dimension_number, c
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_CART_CREATE, file, line, args);
     int result = MPI_Cart_create(old_communicator, dimension_number, dimensions, periods, reorder, new_communicator);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_CART_CREATE, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Cart_get(MPI_Comm communicator, int dimension_number, int* dimensions, int* periods, int* coords, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_CART_GET, file, line, args);
+    int result = MPI_Cart_get(communicator, dimension_number, dimensions, periods, coords);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_CART_GET, file, line, args);
     return result;
 }
 
