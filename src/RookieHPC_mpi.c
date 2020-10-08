@@ -83,6 +83,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_COMM_GET_NAME,
                                     /// The message is sent about MPI_Comm_get_parent
                                     ROOKIEHPC_MESSAGE_COMM_GET_PARENT,
+                                    /// The message is sent about MPI_Comm_group
+                                    ROOKIEHPC_MESSAGE_COMM_GROUP,
                                     /// The message is sent about MPI_Comm_split
                                     ROOKIEHPC_MESSAGE_COMM_SPLIT,
                                     /// The message is sent about MPI_Exscan
@@ -235,6 +237,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Comm_create",
                                                "MPI_Comm_get_name",
                                                "MPI_Comm_get_parent",
+                                               "MPI_Comm_group",
                                                "MPI_Comm_split",
                                                "MPI_Exscan",
                                                "MPI_Finalize",
@@ -702,6 +705,14 @@ int RookieHPC_MPI_Comm_get_parent(MPI_Comm* parent, char* file, int line, const 
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_COMM_GET_PARENT, file, line, args);
     int result = MPI_Comm_get_parent(parent);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_COMM_GET_PARENT, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Comm_group(MPI_Comm communicator, MPI_Group* group, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_COMM_GROUP, file, line, args);
+    int result = MPI_Comm_group(communicator, group);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_COMM_GROUP, file, line, args);
     return result;
 }
 
