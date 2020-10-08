@@ -30,6 +30,7 @@ int RookieHPC_MPI_Cart_get(MPI_Comm communicator, int dimension_number, int* dim
 int RookieHPC_MPI_Cart_shift(MPI_Comm communicator, int direction, int displacement, int* source, int* destination, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_create(MPI_Comm old_communicator, MPI_Group group, MPI_Comm* new_communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_get_name(MPI_Comm communicator, char* name, int* length, char* file, int line, const char* args);
+int RookieHPC_MPI_Comm_get_parent(MPI_Comm* parent, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MPI_Comm* new_communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Exscan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Finalize(char* file, int line);
@@ -135,6 +136,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Comm_create(...) RookieHPC_MPI_Comm_create(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Comm_get_name to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Comm_get_name(...) RookieHPC_MPI_Comm_get_name(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Comm_get_parent to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Comm_get_parent(...) RookieHPC_MPI_Comm_get_parent(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Comm_split to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Comm_split(...) RookieHPC_MPI_Comm_split(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Exscan to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
