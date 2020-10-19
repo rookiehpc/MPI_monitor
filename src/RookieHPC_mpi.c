@@ -89,6 +89,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_COMM_RANK,
                                     /// The message is sent about MPI_Comm_set_name
                                     ROOKIEHPC_MESSAGE_COMM_SET_NAME,
+                                    /// The message is sent about MPI_Comm_size
+                                    ROOKIEHPC_MESSAGE_COMM_SIZE,
                                     /// The message is sent about MPI_Comm_split
                                     ROOKIEHPC_MESSAGE_COMM_SPLIT,
                                     /// The message is sent about MPI_Exscan
@@ -244,6 +246,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Comm_group",
                                                "MPI_Comm_rank",
                                                "MPI_Comm_set_name",
+                                               "MPI_Comm_size",
                                                "MPI_Comm_split",
                                                "MPI_Exscan",
                                                "MPI_Finalize",
@@ -735,6 +738,14 @@ int RookieHPC_MPI_Comm_set_name(MPI_Comm communicator, const char* name, char* f
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_COMM_SET_NAME, file, line, args);
     int result = MPI_Comm_set_name(communicator, name);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_COMM_SET_NAME, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Comm_size(MPI_Comm communicator, int* size, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_COMM_SIZE, file, line, args);
+    int result = MPI_Comm_size(communicator, size);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_COMM_SIZE, file, line, args);
     return result;
 }
 

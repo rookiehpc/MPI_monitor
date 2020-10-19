@@ -34,6 +34,7 @@ int RookieHPC_MPI_Comm_get_parent(MPI_Comm* parent, char* file, int line, const 
 int RookieHPC_MPI_Comm_group(MPI_Comm communicator, MPI_Group* group, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_rank(MPI_Comm communicator, int* rank, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_set_name(MPI_Comm communicator, const char* name, char* file, int line, const char* args);
+int RookieHPC_MPI_Comm_size(MPI_Comm communicator, int* size, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MPI_Comm* new_communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Exscan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Finalize(char* file, int line);
@@ -147,6 +148,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Comm_rank(...) RookieHPC_MPI_Comm_rank(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Comm_set_name to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Comm_set_name(...) RookieHPC_MPI_Comm_set_name(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Comm_size to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Comm_size(...) RookieHPC_MPI_Comm_size(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Comm_split to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Comm_split(...) RookieHPC_MPI_Comm_split(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Exscan to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
