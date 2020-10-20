@@ -231,6 +231,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_TYPE_CREATE_STRUCT,
                                     /// The message is sent about MPI_Type_create_subarray
                                     ROOKIEHPC_MESSAGE_TYPE_CREATE_SUBARRAY,
+                                    /// The message is sent about MPI_Type_free
+                                    ROOKIEHPC_MESSAGE_TYPE_FREE,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -349,6 +351,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Type_create_indexed_block",
                                                "MPI_Type_create_struct",
                                                "MPI_Type_create_subarray",
+                                               "MPI_Type_free",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1403,6 +1406,14 @@ int RookieHPC_MPI_Type_create_subarray(int dim_count, const int array_element_co
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_CREATE_SUBARRAY, file, line, args);
     int result = MPI_Type_create_subarray(dim_count, array_element_counts, subarray_element_counts, subarray_coordinates, order, old_datatype, new_datatype);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_CREATE_SUBARRAY, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Type_free(MPI_Datatype* datatype, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_FREE, file, line, args);
+    int result = MPI_Type_free(datatype);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_FREE, file, line, args);
     return result;
 }
 
