@@ -215,6 +215,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_TESTANY,
                                     /// The message is sent about MPI_Testsome
                                     ROOKIEHPC_MESSAGE_TESTSOME,
+                                    /// The message is sent about MPI_Type_commit
+                                    ROOKIEHPC_MESSAGE_TYPE_COMMIT,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -325,6 +327,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Testall",
                                                "MPI_Testany",
                                                "MPI_Testsome",
+                                               "MPI_Type_commit",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1315,6 +1318,14 @@ int RookieHPC_MPI_Testsome(int count, MPI_Request* requests, int* index_count, i
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TESTSOME, file, line, args);
     int result = MPI_Testsome(count, requests, index_count, indexes, statuses);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TESTSOME, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Type_commit(MPI_Datatype* datatype, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_COMMIT, file, line, args);
+    int result = MPI_Type_commit(datatype);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_COMMIT, file, line, args);
     return result;
 }
 
