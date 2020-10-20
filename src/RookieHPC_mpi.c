@@ -119,6 +119,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_GROUP_INTERSECTION,
                                     /// The message is sent about MPI_Group_rank
                                     ROOKIEHPC_MESSAGE_GROUP_RANK,
+                                    /// The message is sent about MPI_Group_size
+                                    ROOKIEHPC_MESSAGE_GROUP_SIZE,
                                     /// The message is sent about MPI_Iallgather
                                     ROOKIEHPC_MESSAGE_IALLGATHER,
                                     /// The message is sent about MPI_Iallgatherv
@@ -273,6 +275,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Group_incl",
                                                "MPI_Group_intersection",
                                                "MPI_Group_rank",
+                                               "MPI_Group_size",
                                                "MPI_Iallgather",
                                                "MPI_Iallgatherv",
                                                "MPI_Iallreduce",
@@ -881,6 +884,14 @@ int RookieHPC_MPI_Group_rank(MPI_Group group, int* rank, char* file, int line, c
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GROUP_RANK, file, line, args);
     int result = MPI_Group_rank(group, rank);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GROUP_RANK, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Group_size(MPI_Group group, int* size, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GROUP_SIZE, file, line, args);
+    int result = MPI_Group_size(group, size);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GROUP_SIZE, file, line, args);
     return result;
 }
 
