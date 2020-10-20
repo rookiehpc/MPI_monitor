@@ -50,6 +50,7 @@ int RookieHPC_MPI_Group_incl(MPI_Group old_group, int rank_count, const int rank
 int RookieHPC_MPI_Group_intersection(MPI_Group group_a, MPI_Group group_b, MPI_Group* intersection_group, char* file, int line, const char* args);
 int RookieHPC_MPI_Group_rank(MPI_Group group, int* rank, char* file, int line, const char* args);
 int RookieHPC_MPI_Group_size(MPI_Group group, int* size, char* file, int line, const char* args);
+int RookieHPC_MPI_Group_union(MPI_Group group_a, MPI_Group group_b, MPI_Group* union_group, char* file, int line, const char* args);
 int RookieHPC_MPI_Iallgather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Iallgatherv(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, const int* counts_recv, const int* displacements, MPI_Datatype datatype_recv, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Iallreduce(const void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, MPI_Request* request, char* file, int line, const char* args);
@@ -187,6 +188,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Group_rank(...) RookieHPC_MPI_Group_rank(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Group_size to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Group_size(...) RookieHPC_MPI_Group_size(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Group_union to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Group_union(...) RookieHPC_MPI_Group_union(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Iallgather to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Iallgather(...) RookieHPC_MPI_Iallgather(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Iallgatherv to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
