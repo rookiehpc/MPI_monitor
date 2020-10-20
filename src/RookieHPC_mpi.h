@@ -103,6 +103,7 @@ int RookieHPC_MPI_Type_create_hindexed(int block_count, int* block_lengths, MPI_
 int RookieHPC_MPI_Type_create_hindexed_block(int block_count, int block_length, MPI_Aint* displacements, MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args);
 int RookieHPC_MPI_Type_create_hvector(int block_count, int block_length, MPI_Aint stride, MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args);
 int RookieHPC_MPI_Type_create_indexed_block(int block_count, int block_length, int* displacements, MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args);
+int RookieHPC_MPI_Type_create_struct(int block_count, const int block_lengths[], const MPI_Aint displacements[], MPI_Datatype block_types[], MPI_Datatype* new_datatype, char* file, int line, const char* args);
 int RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Waitall(int count, MPI_Request requests[], MPI_Status statuses[], char* file, int line, const char* args);
 int RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_Status* status, char* file, int line, const char* args);
@@ -300,6 +301,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Type_create_hvector(...) RookieHPC_MPI_Type_create_hvector(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Type_create_indexed_block to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Type_create_indexed_block(...) RookieHPC_MPI_Type_create_indexed_block(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Type_create_struct to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Type_create_struct(...) RookieHPC_MPI_Type_create_struct(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Wait to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Wait(...) RookieHPC_MPI_Wait(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Waitall to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued

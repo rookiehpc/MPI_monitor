@@ -227,6 +227,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_TYPE_CREATE_HVECTOR,
                                     /// The message is sent about MPI_Type_create_indexed_block
                                     ROOKIEHPC_MESSAGE_TYPE_CREATE_INDEXED_BLOCK,
+                                    /// The message is sent about MPI_Type_create_struct
+                                    ROOKIEHPC_MESSAGE_TYPE_CREATE_STRUCT,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -343,6 +345,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Type_create_hindexed_block",
                                                "MPI_Type_create_hvector",
                                                "MPI_Type_create_indexed_block",
+                                               "MPI_Type_create_struct",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1381,6 +1384,14 @@ int RookieHPC_MPI_Type_create_indexed_block(int block_count, int block_length, i
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_CREATE_INDEXED_BLOCK, file, line, args);
     int result = MPI_Type_create_indexed_block(block_count, block_length, displacements, old_datatype, new_datatype);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_CREATE_INDEXED_BLOCK, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Type_create_struct(int block_count, const int block_lengths[], const MPI_Aint displacements[], MPI_Datatype block_types[], MPI_Datatype* new_datatype, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_CREATE_STRUCT, file, line, args);
+    int result = MPI_Type_create_struct(block_count, block_lengths, displacements, block_types, new_datatype);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_CREATE_STRUCT, file, line, args);
     return result;
 }
 
