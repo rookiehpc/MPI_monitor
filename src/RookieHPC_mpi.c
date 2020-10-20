@@ -117,6 +117,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_GROUP_INCL,
                                     /// The message is sent about MPI_Group_intersection
                                     ROOKIEHPC_MESSAGE_GROUP_INTERSECTION,
+                                    /// The message is sent about MPI_Group_rank
+                                    ROOKIEHPC_MESSAGE_GROUP_RANK,
                                     /// The message is sent about MPI_Iallgather
                                     ROOKIEHPC_MESSAGE_IALLGATHER,
                                     /// The message is sent about MPI_Iallgatherv
@@ -270,6 +272,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Group_difference",
                                                "MPI_Group_incl",
                                                "MPI_Group_intersection",
+                                               "MPI_Group_rank",
                                                "MPI_Iallgather",
                                                "MPI_Iallgatherv",
                                                "MPI_Iallreduce",
@@ -870,6 +873,14 @@ int RookieHPC_MPI_Group_intersection(MPI_Group group_a, MPI_Group group_b, MPI_G
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GROUP_INTERSECTION, file, line, args);
     int result = MPI_Group_intersection(group_a, group_b, intersection_group);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GROUP_INTERSECTION, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Group_rank(MPI_Group group, int* rank, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_GROUP_RANK, file, line, args);
+    int result = MPI_Group_rank(group, rank);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_GROUP_RANK, file, line, args);
     return result;
 }
 
