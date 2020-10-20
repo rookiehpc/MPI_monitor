@@ -95,6 +95,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_COMM_SPAWN,
                                     /// The message is sent about MPI_Comm_split
                                     ROOKIEHPC_MESSAGE_COMM_SPLIT,
+                                    /// The message is sent about MPI_Dims_create
+                                    ROOKIEHPC_MESSAGE_DIMS_CREATE,
                                     /// The message is sent about MPI_Exscan
                                     ROOKIEHPC_MESSAGE_EXSCAN,
                                     /// The message is sent about MPI_Finalize
@@ -251,6 +253,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Comm_size",
                                                "MPI_Comm_spawn",
                                                "MPI_Comm_split",
+                                               "MPI_Dims_create",
                                                "MPI_Exscan",
                                                "MPI_Finalize",
                                                "MPI_Gather",
@@ -765,6 +768,14 @@ int RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MPI
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_COMM_SPLIT, file, line, args);
     int result = MPI_Comm_split(old_communicator, colour, key, new_communicator);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_COMM_SPLIT, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Dims_create(int process_number, int dimension_number, int* dimensions, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_DIMS_CREATE, file, line, args);
+    int result = MPI_Dims_create(process_number, dimension_number, dimensions);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_DIMS_CREATE, file, line, args);
     return result;
 }
 

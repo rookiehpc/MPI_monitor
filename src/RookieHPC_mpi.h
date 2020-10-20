@@ -37,6 +37,7 @@ int RookieHPC_MPI_Comm_set_name(MPI_Comm communicator, const char* name, char* f
 int RookieHPC_MPI_Comm_size(MPI_Comm communicator, int* size, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_spawn(const char* command, char** arguments, int max_process_number, MPI_Info info, int root, MPI_Comm intracommunicator, MPI_Comm* intercommunicator, int* error_codes, char* file, int line, const char* args);
 int RookieHPC_MPI_Comm_split(MPI_Comm old_communicator, int colour, int key, MPI_Comm* new_communicator, char* file, int line, const char* args);
+int RookieHPC_MPI_Dims_create(int process_number, int dimension_number, int* dimensions, char* file, int line, const char* args);
 int RookieHPC_MPI_Exscan(void* send_buffer, void* receive_buffer, int count, MPI_Datatype datatype, MPI_Op operation, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Finalize(char* file, int line);
 int RookieHPC_MPI_Gather(void* buffer_send, int count_send, MPI_Datatype datatype_send, void* buffer_recv, int count_recv, MPI_Datatype datatype_recv, int root, MPI_Comm communicator, char* file, int line, const char* args);
@@ -155,6 +156,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Comm_spawn(...) RookieHPC_MPI_Comm_spawn(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Comm_split to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Comm_split(...) RookieHPC_MPI_Comm_split(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Dims_create to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Dims_create(...) RookieHPC_MPI_Dims_create(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Exscan to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Exscan(...) RookieHPC_MPI_Exscan(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Finalize to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
