@@ -217,6 +217,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_TESTSOME,
                                     /// The message is sent about MPI_Type_commit
                                     ROOKIEHPC_MESSAGE_TYPE_COMMIT,
+                                    /// The message is sent about MPI_Type_contiguous
+                                    ROOKIEHPC_MESSAGE_TYPE_CONTIGUOUS,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -328,6 +330,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Testany",
                                                "MPI_Testsome",
                                                "MPI_Type_commit",
+                                               "MPI_Type_contiguous",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1326,6 +1329,14 @@ int RookieHPC_MPI_Type_commit(MPI_Datatype* datatype, char* file, int line, cons
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_COMMIT, file, line, args);
     int result = MPI_Type_commit(datatype);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_COMMIT, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Type_contiguous(int count, MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_CONTIGUOUS, file, line, args);
+    int result = MPI_Type_contiguous(count, old_datatype, new_datatype);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_CONTIGUOUS, file, line, args);
     return result;
 }
 

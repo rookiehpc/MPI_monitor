@@ -98,6 +98,7 @@ int RookieHPC_MPI_Testall(int count, MPI_Request* requests, int* flag, MPI_Statu
 int RookieHPC_MPI_Testany(int count, MPI_Request* requests, int* index, int* flag, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Testsome(int count, MPI_Request* requests, int* index_count, int* indexes, MPI_Status* statuses, char* file, int line, const char* args);
 int RookieHPC_MPI_Type_commit(MPI_Datatype* datatype, char* file, int line, const char* args);
+int RookieHPC_MPI_Type_contiguous(int count, MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args);
 int RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Waitall(int count, MPI_Request requests[], MPI_Status statuses[], char* file, int line, const char* args);
 int RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_Status* status, char* file, int line, const char* args);
@@ -285,6 +286,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Testsome(...) RookieHPC_MPI_Testsome(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Type_commit to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Type_commit(...) RookieHPC_MPI_Type_commit(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Type_contiguous to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Type_contiguous(...) RookieHPC_MPI_Type_contiguous(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Wait to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Wait(...) RookieHPC_MPI_Wait(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Waitall to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
