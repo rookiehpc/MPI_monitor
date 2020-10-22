@@ -108,6 +108,7 @@ int RookieHPC_MPI_Type_create_subarray(int dim_count, const int array_element_co
 int RookieHPC_MPI_Type_free(MPI_Datatype* datatype, char* file, int line, const char* args);
 int RookieHPC_MPI_Type_get_extent(MPI_Datatype datatype, MPI_Aint* lower_bound, MPI_Aint* extent, char* file, int line, const char* args);
 int RookieHPC_MPI_Type_indexed(int block_count, int* block_lengths, const int displacements[], MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args);
+int RookieHPC_MPI_Type_vector(int block_count, int block_length, int stride, MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args);
 int RookieHPC_MPI_Wait(MPI_Request* request, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Waitall(int count, MPI_Request requests[], MPI_Status statuses[], char* file, int line, const char* args);
 int RookieHPC_MPI_Waitany(int count, MPI_Request requests[], int* index, MPI_Status* status, char* file, int line, const char* args);
@@ -315,6 +316,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Type_get_extent(...) RookieHPC_MPI_Type_get_extent(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Type_indexed to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Type_indexed(...) RookieHPC_MPI_Type_indexed(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Type_vector to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Type_vector(...) RookieHPC_MPI_Type_vector(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Wait to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Wait(...) RookieHPC_MPI_Wait(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Waitall to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
