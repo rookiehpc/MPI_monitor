@@ -235,6 +235,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_TYPE_FREE,
                                     /// The message is sent about MPI_Type_get_extent
                                     ROOKIEHPC_MESSAGE_TYPE_GET_EXTENT,
+                                    /// The message is sent about MPI_Type_indexed
+                                    ROOKIEHPC_MESSAGE_TYPE_INDEXED,
                                     /// The process has not even called MPI_Init so far
                                     ROOKIEHPC_MESSAGE_UNINITIALISED,
                                     /// The message is sent about MPI_Wait
@@ -355,6 +357,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Type_create_subarray",
                                                "MPI_Type_free",
                                                "MPI_Type_get_extent",
+                                               "MPI_Type_indexed",
                                                "-",
                                                "MPI_Wait",
                                                "MPI_Waitall",
@@ -1425,6 +1428,14 @@ int RookieHPC_MPI_Type_get_extent(MPI_Datatype datatype, MPI_Aint* lower_bound, 
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_GET_EXTENT, file, line, args);
     int result = MPI_Type_get_extent(datatype, lower_bound, extent);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_GET_EXTENT, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Type_indexed(int block_count, int* block_lengths, const int displacements[], MPI_Datatype old_datatype, MPI_Datatype* new_datatype, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TYPE_INDEXED, file, line, args);
+    int result = MPI_Type_indexed(block_count, block_lengths, displacements, old_datatype, new_datatype);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TYPE_INDEXED, file, line, args);
     return result;
 }
 
