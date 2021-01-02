@@ -24,6 +24,7 @@ int RookieHPC_MPI_Barrier(MPI_Comm comm, char* file, int line, const char* args)
 int RookieHPC_MPI_Bcast(void* buffer, int count, MPI_Datatype datatype, int emitter_rank, MPI_Comm communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Bsend(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, char* file, int line, const char* args);
 int RookieHPC_MPI_Bsend_init(void* buffer, int count, MPI_Datatype type, int dst, int tag, MPI_Comm comm, MPI_Request* request, char* file, int line, const char* args);
+int RookieHPC_MPI_Cancel(MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Cart_coords(MPI_Comm communicator, int rank, int dimension_number, int* coords, char* file, int line, const char* args);
 int RookieHPC_MPI_Cart_create(MPI_Comm old_communicator, int dimension_number, const int* dimensions, const int* periods, int reorder, MPI_Comm* new_communicator, char* file, int line, const char* args);
 int RookieHPC_MPI_Cart_get(MPI_Comm communicator, int dimension_number, int* dimensions, int* periods, int* coords, char* file, int line, const char* args);
@@ -148,6 +149,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Bsend(...) RookieHPC_MPI_Bsend(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Bsend_init to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Bsend_init(...) RookieHPC_MPI_Bsend_init(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Cancel to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Cancel(...) RookieHPC_MPI_Cancel(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Card_coords to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Card_coords(...) RookieHPC_MPI_Cart_coords(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Card_create to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued

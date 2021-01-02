@@ -69,6 +69,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_BSEND,
                                     /// The message is sent about MPI_Bsend_init
                                     ROOKIEHPC_MESSAGE_BSEND_INIT,
+                                    /// The message is sent about MPI_Cancel
+                                    ROOKIEHPC_MESSAGE_CANCEL,
                                     /// The message is sent about MPI_Cart_coords
                                     ROOKIEHPC_MESSAGE_CART_COORDS,
                                     /// The message is sent about MPI_Cart_create
@@ -276,6 +278,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Bcast",
                                                "MPI_Bsend",
                                                "MPI_Bsend_init",
+                                               "MPI_Cancel",
                                                "MPI_Cart_coords",
                                                "MPI_Cart_create",
                                                "MPI_Cart_get",
@@ -719,6 +722,14 @@ int RookieHPC_MPI_Bsend_init(void* buffer, int count, MPI_Datatype type, int dst
     int result = MPI_Bsend_init(buffer, count, type, dst, tag, comm, request);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_BSEND_INIT, file, line, args);
     return result;
+}
+
+int RookieHPC_MPI_Cancel(MPI_Request* request, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_CANCEL, file, line, args);
+    int result = MPI_Cancel(request);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_CANCEL, file, line, args);
+    return result; 
 }
 
 int RookieHPC_MPI_Cart_coords(MPI_Comm communicator, int rank, int dimension_number, int* coords, char* file, int line, const char* args)
