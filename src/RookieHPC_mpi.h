@@ -95,6 +95,7 @@ int RookieHPC_MPI_Ssend_init(const void* buffer, int count, MPI_Datatype datatyp
 int RookieHPC_MPI_Start(MPI_Request* request, char* file, int line, const char* args);
 int RookieHPC_MPI_Startall(int count, MPI_Request requests[], char* file, int line, const char* args);
 int RookieHPC_MPI_Test(MPI_Request* request, int* flag, MPI_Status* status, char* file, int line, const char* args);
+int RookieHPC_MPI_Test_cancelled(const MPI_Status* status, int* flag, char* file, int line, const char* args);
 int RookieHPC_MPI_Testall(int count, MPI_Request* requests, int* flag, MPI_Status* statuses, char* file, int line, const char* args);
 int RookieHPC_MPI_Testany(int count, MPI_Request* requests, int* index, int* flag, MPI_Status* status, char* file, int line, const char* args);
 int RookieHPC_MPI_Testsome(int count, MPI_Request* requests, int* index_count, int* indexes, MPI_Status* statuses, char* file, int line, const char* args);
@@ -291,6 +292,8 @@ double RookieHPC_MPI_Wtime(char* file, int line, const char* args);
 #define MPI_Startall(...) RookieHPC_MPI_Startall(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Test to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Test(...) RookieHPC_MPI_Test(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
+/// Redirects calls from MPI_Test_cancelled to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
+#define MPI_Test_cancelled(...) RookieHPC_MPI_Test_cancelled(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Testall to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued
 #define MPI_Testall(...) RookieHPC_MPI_Testall(__VA_ARGS__, __FILE__, __LINE__, #__VA_ARGS__)
 /// Redirects calls from MPI_Testany to the RookieHPC version and collects the file name as well as the line at which the MPI call is issued

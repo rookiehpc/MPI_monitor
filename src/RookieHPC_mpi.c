@@ -211,6 +211,8 @@ enum RookieHPC_MPI_message_type_t { /// The message is sent about MPI_Abort
                                     ROOKIEHPC_MESSAGE_STARTALL,
                                     /// The message is sent about MPI_Test
                                     ROOKIEHPC_MESSAGE_TEST,
+                                    /// The message is sent about MPI_Test_cancelled
+                                    ROOKIEHPC_MESSAGE_TEST_CANCELLED,
                                     /// The message is sent about MPI_Testall
                                     ROOKIEHPC_MESSAGE_TESTALL,
                                     /// The message is sent about MPI_Testany
@@ -349,6 +351,7 @@ const char* RookieHPC_MPI_routine_name_t[] = { "MPI_Abort",
                                                "MPI_Start",
                                                "MPI_Startall",
                                                "MPI_Test",
+                                               "MPI_Test_cancelled",
                                                "MPI_Testall",
                                                "MPI_Testany",
                                                "MPI_Testsome",
@@ -1338,6 +1341,14 @@ int RookieHPC_MPI_Test(MPI_Request* request, int* flag, MPI_Status* status, char
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TEST, file, line, args);
     int result = MPI_Test(request, flag, status);
     RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TEST, file, line, args);
+    return result;
+}
+
+int RookieHPC_MPI_Test_cancelled(const MPI_Status* status, int* flag, char* file, int line, const char* args)
+{
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_BEFORE, ROOKIEHPC_MESSAGE_TEST_CANCELLED, file, line, args);
+    int result = MPI_Test_cancelled(status, flag);
+    RookieHPC_monitoring_message(ROOKIEHPC_TEMPORALITY_AFTER, ROOKIEHPC_MESSAGE_TEST_CANCELLED, file, line, args);
     return result;
 }
 
