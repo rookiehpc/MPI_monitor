@@ -8,9 +8,12 @@ CFLAGS=-Wall -Wextra -pthread -L$(LIB_DIRECTORY) -lRookieHPC_mpi -I$(SRC_DIRECTO
 
 default: all
 
-all: all_states all_deadlocks all_hacks
+all: all_states \
+	 all_deadlocks
 
-all_deadlocks: deadlock_mutual_ssend deadlock_mutual_recv deserter broadcast
+all_deadlocks: deadlock_mutual_ssend \
+			   deadlock_mutual_recv \
+			   deserter broadcast
 
 all_states: make_library
 	mpicc -o $(BIN_DIRECTORY)/all_states $(APP_DIRECTORY)/all_states.c $(CFLAGS);
@@ -20,14 +23,6 @@ deadlock_mutual_ssend: make_library
 
 deadlock_mutual_recv: make_library
 	mpicc -o $(BIN_DIRECTORY)/deadlock_mutual_recv $(APP_DIRECTORY)/deadlock_mutual_recv.c $(CFLAGS);
-
-all_hacks: hack_sql_injection hack_html_injection
-
-hack_sql_injection: make_library
-	mpicc -o $(BIN_DIRECTORY)/hack_sql_injection $(APP_DIRECTORY)/hack_sql_injection.c $(CFLAGS);
-
-hack_html_injection: make_library
-	mpicc -o $(BIN_DIRECTORY)/hack_html_injection $(APP_DIRECTORY)/hack_html_injection.c $(CFLAGS);
 
 deserter: make_library
 	mpicc -o $(BIN_DIRECTORY)/deserter $(APP_DIRECTORY)/deserter.c $(CFLAGS);
@@ -45,4 +40,4 @@ create_directories:
 	@for i in $(OBJ_DIRECTORY) $(LIB_DIRECTORY) $(BIN_DIRECTORY); do if [ ! -d $${i} ]; then mkdir $${i}; fi; done
 
 clean:
-	@rm -rf $(OBJ_DIRECTORY) $(LIB_DIRECTORY) $(BIN_DIRECTORY);
+	rm -rf $(OBJ_DIRECTORY) $(LIB_DIRECTORY) $(BIN_DIRECTORY);
