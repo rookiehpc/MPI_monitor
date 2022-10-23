@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "RookieHPC_mpi.h"
+#include "../src/mpi_monitor.h"
 /**
  * @details Covers the following situations:
  * - Mutual ssend deadlock: 0 vs 1

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <RookieHPC_mpi.h>
+#include "../src/mpi_monitor.h"
 
 int main(int argc, char* argv[])
 {

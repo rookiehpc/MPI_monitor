@@ -4,7 +4,7 @@ LIB_DIRECTORY=lib
 APP_DIRECTORY=apps
 BIN_DIRECTORY=bin
 
-CFLAGS=-Wall -Wextra -pthread -L$(LIB_DIRECTORY) -lRookieHPC_mpi -I$(SRC_DIRECTORY)
+CFLAGS=-Wall -Wextra -pthread -L$(LIB_DIRECTORY) -lmpi_monitor -I$(SRC_DIRECTORY)
 
 default: all
 
@@ -13,7 +13,7 @@ all: all_states \
 
 all_deadlocks: deadlock_mutual_ssend \
 			   deadlock_mutual_recv \
-			   deserter broadcast
+			   deserter
 
 all_states: make_library
 	mpicc -o $(BIN_DIRECTORY)/all_states $(APP_DIRECTORY)/all_states.c $(CFLAGS);
@@ -27,14 +27,11 @@ deadlock_mutual_recv: make_library
 deserter: make_library
 	mpicc -o $(BIN_DIRECTORY)/deserter $(APP_DIRECTORY)/deserter.c $(CFLAGS);
 
-broadcast: make_library
-	mpicc -o $(BIN_DIRECTORY)/broadcast $(APP_DIRECTORY)/broadcast.c $(CFLAGS);
-
 make_library: compile
-	ar rcs $(LIB_DIRECTORY)/libRookieHPC_mpi.a $(OBJ_DIRECTORY)/RookieHPC_mpi.o
+	ar rcs $(LIB_DIRECTORY)/libmpi_monitor.a $(OBJ_DIRECTORY)/mpi_monitor.o
 
-compile: create_directories $(SRC_DIRECTORY)/RookieHPC_mpi.c $(SRC_DIRECTORY)/RookieHPC_mpi.h
-	mpicc -o $(OBJ_DIRECTORY)/RookieHPC_mpi.o -c $(SRC_DIRECTORY)/RookieHPC_mpi.c -Wall -Wextra -pthread -DROOKIEHPC_MPI_LIB
+compile: create_directories $(SRC_DIRECTORY)/mpi_monitor.c $(SRC_DIRECTORY)/mpi_monitor.h
+	mpicc -o $(OBJ_DIRECTORY)/mpi_monitor.o -c $(SRC_DIRECTORY)/mpi_monitor.c -Wall -Wextra -pthread
 
 create_directories:
 	@for i in $(OBJ_DIRECTORY) $(LIB_DIRECTORY) $(BIN_DIRECTORY); do if [ ! -d $${i} ]; then mkdir $${i}; fi; done
