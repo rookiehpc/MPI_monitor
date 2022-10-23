@@ -1,4 +1,4 @@
-# RookieHPC_MPI: An MPI monitor live #
+# MPI_monitor: See what your MPI processes do, live #
 
 * [What does it do?](#what-does-it-do)
 * [Setup](#setup)
@@ -7,7 +7,7 @@
 * [Limitations](#limitations)
 
 ## What does it do? ##
-This mini-library gives you a table reporting the current state of each MPI process live. It is part of the [RookieHPC](https://www.rookiehpc.com) project to contribute in making High-Performance Computing easier to learn.
+This mini-library gives you a table reporting the current state of each MPI process live. It is part of the [RookieHPC](https://github.com/rookiehpc/rookiehpc.github.io) project to contribute in making High-Performance Computing easier to learn.
 
 The table below is an example of what you would see in your console:
 
@@ -26,8 +26,8 @@ That's it! If your code has a deadlock, you will now easily see who is responsib
 
 ## Setup ##
 This library has been designed to be very quick and convenient to use:
-1) Replace all your `#include <mpi.h>` with `#include "RookieHPC_mpi.h"`
-1) Add the `RookieHPC_mpi.c` file to your compilation command
+1) Replace all your `#include <mpi.h>` with `#include "mpi_monitor.h"`
+1) Add the `mpi_monitor.c` file to your compilation command
 1) Run your application as usual
 
 ## Termination ##
@@ -40,7 +40,7 @@ Behind the scene, when the MPI processes issue the `MPI_Init`, two things happen
 1) **MPI process 0** creates a one-sided window, and exposes a buffer that will be used for monitoring
 2) **MPI process 0** spawns a thread that will regularly check that buffer and print it out to the console
 
-From that point on, every time an **MPI process X** issues a call to the **MPI routine Y**, it is caught by the `RookieHPC_MPI` library and two messages are sent from **MPI process X** to **MPI process 0** using one-sided communications:
+From that point on, every time an **MPI process X** issues a call to the **MPI routine Y**, it is caught by the `MPI_monitor` library and two messages are sent from **MPI process X** to **MPI process 0** using one-sided communications:
 1) One before issuing the MPI routine demanded, so that the monitor buffer on **MPI process 0** is updated and knows that **MPI process X** has started to call **MPI routine Y**.
 2) One after the call to **MPI routine Y** has returned so the monitor buffer on **MPI process 0** is updated and knows that **MPI process X** completed its call to **MPI routine Y**.
 
